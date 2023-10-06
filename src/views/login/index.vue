@@ -154,8 +154,8 @@
       <div class="s-bottom-layer-content">
 
         <div class="lh">
-          <a class="text-color" href="https://beian.miit.gov.cn" target="_blank">
-            沪ICP备XXXXXXXXX号-1
+          <a class="text-color" href="https://bwsti.com" target="_blank">
+            京ICP备13012438号
           </a>
         </div>
         <div class="open-content-info">
@@ -165,10 +165,10 @@
                 <div class="lh tip-item" style="display: none">
                   <a
                     class="text-color"
-                    href="https://beian.miit.gov.cn"
+                    href="https://bwsti.com"
                     target="_blank"
                   >
-                    沪ICP备XXXXXXXXX号-1
+                    京ICP备13012438号
                   </a>
                 </div>
               </div>

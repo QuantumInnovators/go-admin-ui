@@ -49,6 +49,22 @@
               @keyup.enter.native="handleQuery"
             />
           </el-form-item>
+          <!-- <el-form-item label="分类" prop="classId">
+            <el-select
+              v-model="queryParams.classId"
+              placeholder="分类"
+              clearable
+              size="small"
+              style="width: 240px"
+            >
+              <el-option
+                v-for="dict in statusOptions"
+                :key="dict.value"
+                :label="dict.label"
+                :value="dict.value"
+              />
+            </el-select> -->
+          <!-- </el-form-item> -->
           <el-form-item>
             <el-button
               type="primary"
