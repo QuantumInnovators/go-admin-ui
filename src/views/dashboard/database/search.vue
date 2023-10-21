@@ -1,8 +1,8 @@
 /**
- * @FileDesc: 可视化地图首页
+ * @FileDesc: 所有数据库浏览 根据搜索结果进行数据库数据展示
  * @Author:
- * @Func: 能够进行可视化地图访问
- * @Components:SpeciesClassif
+ * @Func: 能够浏览展示数据
+ * @Components:
  */
 <template>
   <div>
@@ -36,8 +36,6 @@
         </el-col>
       </div>
     </el-row>
-
-    <!-- 导航卡片 -->
     <el-row :span="20">
       <el-col :span="10">
         <div class="card-container">
@@ -51,7 +49,6 @@
       </div>
     </el-col>
 
-    <!-- 尾部 -->
     <el-row>
       <el-col :span="200">
         <div class="title-bar">
@@ -71,16 +68,12 @@ export default {
   },
   data() {
     return {
-      cards: [
-        { titlename: 'NCBI数据库', description: 'Deposit data or manuscripts into NCBI databases', imgUrl: require('@/assets/logo/logo.png'), pageUrl: '/database/index' },
-        { titlename: '北京数据库', description: 'Deposit data or manuscripts into NCBI databases', imgUrl: require('@/assets/logo/logo.png'), pageUrl: '/database/search_ncbi' },
-        { titlename: '物种分类  ', description: 'Deposit data or manuscripts into NCBI databases', imgUrl: require('@/assets/logo/logo.png'), pageUrl: '/profile/index' }
+      cards_ncbi: [
+        { titlename: 'NCBI数据库', description: 'Deposit data or manuscripts into NCBI databases', imgUrl: require('@/assets/logo/logo.png'), pageUrl: '/database/index' }
         // ... 其他卡片的属性
       ],
-      cards_2: [
-        { titlename: '上传', description: 'Deposit data or manuscripts into NCBI databases', imgUrl: require('@/assets/logo/logo.png'), pageUrl: '/profile/index' },
-        { titlename: '管理', description: 'Deposit data or manuscripts into NCBI databases', imgUrl: require('@/assets/logo/logo.png'), pageUrl: '/dashboard/taxonomy/index' },
-        { titlename: 'DNA分析', description: 'Deposit data or manuscripts into NCBI databases', imgUrl: require('@/assets/logo/logo.png'), pageUrl: '/dashboard/taxonomy/index' }
+      cards_beijin: [
+        { titlename: '北京数据库', description: 'Deposit data or manuscripts into NCBI databases', imgUrl: require('@/assets/logo/logo.png'), pageUrl: '/profile/index' }
         // ... 其他卡片的属性
       ],
       selectedOption: 'all',
