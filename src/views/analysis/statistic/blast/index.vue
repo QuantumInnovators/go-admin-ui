@@ -1,251 +1,247 @@
 <template>
   <div>
-    <el-row>
-      <el-col :span="200">
-        <div class="title-bar">
-          <el-col span="24" offset="10">
-            <h1 class="title">DNA数据库系统</h1>
-          </el-col>
-          <el-col span="2" offset="2">
-            <el-button class=".header-button" type="" @click="open">使用帮助</el-button>
-          </el-col>
-        </div>
-      </el-col>
-    </el-row>
-    <div>
-      <!-- 页签上传选中 -->
-      <el-tabs :tab-position="tabPosition" style="height: 800px;">
-        <el-tab-pane label="新增数据">
-          <div>
-            <el-col :span="24">
-              <el-form
-                ref="elForm"
-                :model="formData"
-                :rules="rules"
-                size="medium"
-                label-width="100px"
-                label-position="top"
-              >
-                <el-form-item label="编号">
-                  <el-input v-model="formData.input1" />
-                </el-form-item>
-                <el-form-item label="拉丁文名">
-                  <el-input v-model="formData.input2" />
-                </el-form-item>
-                <el-form-item label="分类">
-                  <el-autocomplete
-                    v-model="formData.state1"
-                    class="inline-input"
-                    :fetch-suggestions="querySearch"
-                    placeholder="请输入内容"
-                    @select="handleSelect"
-                  />
-                </el-form-item>
-                <el-form-item label="FASTA:" prop="el_input_textarea_fasta">
-                  <el-input
-                    v-model="formData.el_input_textarea_fasta"
-                    type="textarea"
-                    placeholder="请输入多行文本FASTA:"
-                    :autosize="{minRows: 6, maxRows: 10}"
-                    :style="{width: '100%'}"
-                  />
-                </el-form-item>
-              </el-form>
-            </el-col>
-            <div v-if="savedData">
-              <strong>保存的内容:</strong>
-              <pre>{{ savedData }}</pre>
-            </div>
-            <el-row>
-              <el-button type="primary">保存</el-button>
-              <el-button type="primary">提交</el-button>
-            </el-row>
-          </div>
-        </el-tab-pane>
-        <el-tab-pane label="fasta文件">
-          <div :span="10">
-            <el-input
-              v-model="fastaContent"
-              type="textarea"
-              :rows="10"
-              placeholder="Prepare your sequence(s) in the FASTA format that starts with a definition line, followed with a hard return and the sequence. The simplest definition line requires the “> “symbol and a sequence_ID.
-
-Example:
-
->Seq1
-CCTTTAT...
->Seq2
-GGTAGGT...
-Use only ASCII characters for your definition line and IUPAC codes for your sequences. Upload a FASTA file as a plain-text file (prepared with a text editor). The file may have one or more sequences."
-            />
-          </div>
-          <div :span="10">
-            <el-form
-              ref="uploadForm"
-              :model="formData"
-              :rules="rules"
-              size="big"
-              label-width="100px"
+    <el-tabs v-model="activeName" type="border-card" @tab-click="handleClick">
+      <el-tab-pane label="BLAST Search" name="first">
+        <el-row :gutter="15">
+          <el-form
+            ref="elForm"
+            :model="formData"
+            :rules="rules"
+            size="medium"
+            label-width="100px"
+            label-position="top"
+          >
+            <el-col
+              :span="4"
             >
-              <el-form-item label="上传" prop="uploadFile" required>
-                <el-upload
-                  ref="uploadFile"
-                  :headers="headers"
-                  :file-list="uploadFilefileList"
-                  :action="uploadFileAction"
-                  :before-upload="uploadFileBeforeUpload"
-                  accept=".fasta"
-                  name="file"
-                  :data="uploadParams"
-                  :on-success="uploadActionSuccess"
+              <el-form-item label="Database:" prop="el_selete_database">
+                <el-select
+                  v-model="formData.el_selete_database"
+                  placeholder="请选择Database"
+                  clearable
+                  :style="{width: '100%'}"
                 >
-                  <el-button
-                    size="big"
-                    type="primary"
-                    icon="el-icon-upload"
-                  >点击上传</el-button>
-                </el-upload>
+                  <el-option
+                    v-for="(item, index) in el_selete_databaseOptions"
+                    :key="index"
+                    :label="item.label"
+                    :value="item.value"
+                    :disabled="item.disabled"
+                  />
+                  <!-- </el-option> -->
+                </el-select>
               </el-form-item>
+            </el-col>
+            <el-col :span="4">
+              <el-form-item label="Program:" prop="el_selete_program">
+                <el-select
+                  v-model="formData.el_selete_program"
+                  placeholder="请选择Program:"
+                  clearable
+                  :style="{width: '100%'}"
+                >
+                  <el-option
+                    v-for="(item, index) in el_selete_programOptions"
+                    :key="index"
+                    :label="item.label"
+                    :value="item.value"
+                    :disabled="item.disabled"
+                  />
+                  <!-- </el-option> -->
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="4">
+              <el-form-item label="E-Value:" prop="el_selete_e_vlaue">
+                <el-select
+                  v-model="formData.el_selete_e_vlaue"
+                  placeholder="请选择E-Value:"
+                  clearable
+                  :style="{width: '100%'}"
+                >
+                  <el-option
+                    v-for="(item, index) in el_selete_e_vlaueOptions"
+                    :key="index"
+                    :label="item.label"
+                    :value="item.value"
+                    :disabled="item.disabled"
+                  />
+                  <!-- </el-option> -->
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="4">
+              <el-form-item label="Best Hit:" prop="el_inputed_best_hit">
+                <el-input
+                  v-model="formData.el_inputed_best_hit"
+                  placeholder="请输入Best Hit:"
+                  clearable
+                  :style="{width: '100%'}"
+                />
+                <!-- </el-input> -->
+              </el-form-item>
+            </el-col>
+            <el-col :span="4">
+              <el-form-item label="Best Match:" prop="el_inputed_best_match">
+                <el-input
+                  v-model="formData.el_inputed_best_match"
+                  placeholder="请输入Best Match:"
+                />
+                <!-- </el-input> -->
+              </el-form-item>
+            </el-col>
+            <el-col :span="24">
+              <el-form-item label="FASTA:" prop="el_input_textarea_fasta">
+                <el-input
+                  v-model="formData.el_input_textarea_fasta"
+                  type="textarea"
+                  placeholder="请输入多行文本FASTA:"
+                  :autosize="{minRows: 6, maxRows: 10}"
+                  :style="{width: '100%'}"
+                />
+                <!-- </el-input> -->
+              </el-form-item>
+            </el-col>
+            <!-- <el-col :span="2">
+              <el-form-item label-width="200px" label="" prop="el_button_primary_submit">
+                <el-button type="primary" icon="el-icon-search" size="medium">
+                  提交
+                </el-button>
+              </el-form-item>
+            </el-col> -->
+            <el-col :span="24">
               <el-form-item size="large">
-                <el-button type="primary" @click="submitUploadForm">提交</el-button>
-                <el-button @click="resetUploadForm">重置</el-button>
+                <el-button type="primary" @click="submitForm">提交</el-button>
+                <el-button @click="resetForm">重置</el-button>
               </el-form-item>
-            </el-form>
-          </div>
-        </el-tab-pane>
-        <el-tab-pane label="excel文件">
-          excel文件
-        </el-tab-pane>
-      </el-tabs>
-    </div>
-    <!-- 尾部 -->
-    <el-row>
-      <el-col :span="200">
-        <div class="title-bar">
-          <el-col span="24" offset="10" />
+            </el-col>
+          </el-form>
+        </el-row>
+      </el-tab-pane>
+      <el-tab-pane label="BLAST Results" name="second">
+        <div v-if="activeTab === 'tab1'">
+          Tab 2 内容
         </div>
-      </el-col>
-    </el-row>
-
+      </el-tab-pane>
+    </el-tabs>
   </div>
 </template>
-
-<style>
-.header-button {
-  width: auto;
-  margin: 1.0rem 0.3rem;
-  background-color: transparent;
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  font-size: 1.4rem;
-  font-weight: normal;
-  white-space: nowrap;
-  padding: 0.5rem 0.5rem;
-}
-.title-bar {
-  background-color: rgba(29, 0, 252, 0.534);
-  height: 100px;
-  width: 2000px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-</style>
 <script>
-import {
-  uploadSequence
-} from '@/api/sequence/sequence'
-import { getToken } from '@/utils/auth'
-
 export default {
+  components: {},
+  props: [],
   data() {
     return {
-      tabPosition: 'left',
-      fastaContent: '', // 绑定文本框的值
-      headers: { Authorization: 'Bearer ' + getToken() },
+      activeName: 'first',
+      activeTab: 'tab1',
       formData: {
         el_selete_database: 1,
-        input1: '',
-        input2: '',
-        state1: '',
+        el_selete_program: 1,
+        el_selete_e_vlaue: 1,
+        el_inputed_best_hit: 0,
+        el_inputed_best_match: 0,
         el_input_textarea_fasta: '',
         el_button_primary_submit: undefined
       },
       rules: {
+        el_selete_database: [],
+        el_selete_program: [],
+        el_selete_e_vlaue: [],
+        el_inputed_best_hit: [],
+        el_inputed_best_match: [],
         el_input_textarea_fasta: [{
           required: true,
           message: '请输入多行文本FASTA:',
           trigger: 'blur'
         }]
       },
-      savedData: {} // 保存的数据对象
+      el_selete_databaseOptions: [{
+        'label': '本地数据库',
+        'value': 1
+      }, {
+        'label': 'NCBI数据库',
+        'value': 2
+      }, {
+        'label': '引物数据库',
+        'value': 3
+      }],
+      el_selete_programOptions: [{
+        'label': 'blastn',
+        'value': 1
+      }, {
+        'label': 'blastp',
+        'value': 2
+      }, {
+        'label': 'blastx',
+        'value': 3
+      }, {
+        'label': 'tblastn',
+        'value': 4
+      }, {
+        'label': 'tblastx',
+        'value': 5
+      }],
+      el_selete_e_vlaueOptions: [{
+        'label': '10',
+        'value': 1
+      }, {
+        'label': '1',
+        'value': 2
+      }, {
+        'label': '0.1',
+        'value': 3
+      }, {
+        'label': '0.01',
+        'value': 4
+      }],
+      el_inputed_best_hitOptions: [{
+        'label': '10',
+        'value': 1
+      }, {
+        'label': '1',
+        'value': 2
+      }, {
+        'label': '0.1',
+        'value': 3
+      }, {
+        'label': '0.01',
+        'value': 4
+      }],
+      el_inputed_best_matchOptions: [{
+        'label': '10',
+        'value': 1
+      }, {
+        'label': '1',
+        'value': 2
+      }, {
+        'label': '0.1',
+        'value': 3
+      }, {
+        'label': '0.01',
+        'value': 4
+      }]
     }
   },
-  mounted() {
-    this.restaurants = this.loadAll()
-  },
+  computed: {},
+  watch: {},
+  created() {},
+  mounted() {},
   methods: {
-    querySearch(queryString, cb) {
-      var restaurants = this.restaurants
-      var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants
-      // 调用 callback 返回建议列表的数据
-      cb(results)
+    handleClick(tab, event) {
+      console.log(tab, event)
     },
-    createFilter(queryString) {
-      return (restaurant) => {
-        return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
-      }
-    },
-    loadAll() {
-      return [
-        { 'value': '三全鲜食（北新泾店）', 'address': '长宁区新渔路144号' },
-        { 'value': 'Hot honey 首尔炸鸡（仙霞路）', 'address': '上海市长宁区淞虹路661号' },
-        { 'value': '新旺角茶餐厅', 'address': '上海市普陀区真北路988号创邑金沙谷6号楼113' },
-        { 'value': '泷千家(天山西路店)', 'address': '天山西路438号' },
-        { 'value': '胖仙女纸杯蛋糕（上海凌空店）', 'address': '上海市长宁区金钟路968号1幢18号楼一层商铺18-101' }
-      ]
-    },
-    handleSelect(item) {
-      console.log(item)
-    },
-    submitUploadForm() {
-      this.$refs['uploadForm'].validate((valid) => {
-        // console.log(this.uploadFilefileList)
-        // if (!valid) return
+    submitForm() {
+      this.$refs['elForm'].validate(valid => {
+        if (!valid) return
         // TODO 提交表单
-        uploadSequence(this.path).then((response) => {
-          if (response.code === 200) {
-            this.msgSuccess(response.msg)
-            this.open = false
-            this.getList()
-          } else {
-            this.msgError(response.msg)
-          }
-        })
       })
     },
-    resetUploadForm() {
-      this.$refs['uploadForm'].resetFields()
-      this.uploadFilefileList = []
-    },
-    uploadActionSuccess(response, file, fileList) {
-      // 文件上传成功后的处理逻辑
-      this.path.path = response.data.path
-      console.log(this.path)
-    },
-    uploadFileBeforeUpload(file) {
-      console.log(file)
-      return true
-      // const isRightSize = file.size / 1024 / 1024 < 2
-      // if (!isRightSize) {
-      //   this.$message.error('文件大小超过 2MB')
-      // }
-      // const isAccept = new RegExp('.fasta').test(file.type)
-      // if (!isAccept) {
-      //   this.$message.error('应该选择.fasta类型的文件')
-      // }
-      // return isRightSize && isAccept
+    resetForm() {
+      this.$refs['elForm'].resetFields()
     }
   }
 }
+
 </script>
+<style>
+</style>

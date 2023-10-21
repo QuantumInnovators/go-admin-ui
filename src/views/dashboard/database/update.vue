@@ -164,7 +164,7 @@ Use only ASCII characters for your definition line and IUPAC codes for your sequ
   padding: 0.5rem 0.5rem;
 }
 .title-bar {
-  background-color: rgba(29, 0, 252, 0.534);
+  background-color: #20558a;
   height: 100px;
   width: 2000px;
   display: flex;

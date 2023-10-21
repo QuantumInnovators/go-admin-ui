@@ -34,11 +34,76 @@
           </el-col>
 
           <el-col :span="20" :xs="24">
-            <el-row :gutter="20" class="mb8">
+            <el-table
+              v-loading="loading"
+              :data="userList"
+              border
+              @selection-change="handleSelectionChange"
+              @sort-change="handleSortChang"
+            >
+              <el-table-column type="selection" width="80" align="center" />
+              <el-table-column label="编号" width="80" prop="userId" sortable="custom" />
+              <el-table-column label="界" width="120" prop="username" sortable="custom" :show-overflow-tooltip="true" />
+              <el-table-column label="门" width="120" prop="nickName" :show-overflow-tooltip="true" />
+              <el-table-column label="纲" width="120" prop="dept.deptName" :show-overflow-tooltip="true" />
+              <el-table-column label="目" width="120" prop="phone" />
+              <el-table-column label="科" width="120" prop="phone" sortable="custom" />
+              <el-table-column
+                label="属"
+                prop="createdAt"
+                sortable="custom"
+                width="120"
+              >
+                <template slot-scope="scope">
+                  <span>{{ parseTime(scope.row.createdAt) }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                label="操作"
+                width="160"
+
+                fix="right"
+                class-name="small-padding fixed-width"
+              >
+                <template slot-scope="scope">
+                  <el-button
+                    v-permisaction="['admin:sysUser:edit']"
+                    size="mini"
+                    type="text"
+                    icon="el-icon-edit"
+                    @click="handleUpdate(scope.row)"
+                  >修改</el-button>
+                  <el-button
+                    v-if="scope.row.userId !== 1"
+                    v-permisaction="['admin:sysUser:remove']"
+                    size="mini"
+                    type="text"
+                    icon="el-icon-delete"
+                    @click="handleDelete(scope.row)"
+                  >删除</el-button>
+                  <el-button
+                    v-permisaction="['admin:sysUser:resetPassword']"
+                    size="mini"
+                    type="text"
+                    icon="el-icon-key"
+                    @click="handleResetPwd(scope.row)"
+                  >重置</el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+
+            <!-- <pagination
+              v-show="total>0"
+              :total="total"
+              :page.sync="queryParams.pageIndex"
+              :limit.sync="queryParams.pageSize"
+              @pagination="getList"
+            /> -->
+            <!-- <el-row :gutter="20" class="mb8">
               <el-col v-for="(card, index) in cards" :key="index" :span="5">
                 <SpeciesClassif :titlename_cn="card.titlename" :button-titles="card.buttonTitles" :img-url="card.imgUrl" :page-url="card.pageUrl" />
               </el-col>
-            </el-row>
+            </el-row> -->
           </el-col>
         </el-row>
       </el-card>
@@ -47,18 +112,40 @@
 </template>
 
 <script>
-import SpeciesClassif from '../components/SpeciesClassif.vue'
+// import SpeciesClassif from '../components/SpeciesClassif.vue'
 import Treeselect from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 
 export default {
   name: 'ClassManage',
   components: {
-    SpeciesClassif,
+    // SpeciesClassif,
     Treeselect
   },
   data() {
     return {
+      // 遮罩层
+      loading: false,
+      // 用户表格数据
+      // userList: null,
+      userList: [
+        {
+          userId: '1',
+          username: '王小',
+          nickName: '123',
+          phone: '123456',
+          createdAt: '523',
+          address: '上海市普陀区金沙江路 1518 弄'
+        },
+        {
+          userId: '2',
+          username: '王小',
+          nickName: '123',
+          phone: '123456',
+          createdAt: '523',
+          address: '上海市普陀区金沙江路 1518 弄'
+        }
+      ],
       // 分类名称
       deptspeciesClassificationName: undefined,
       cards: [
@@ -135,6 +222,30 @@ export default {
       if (!value) return true
       return data.label.indexOf(value) !== -1
     },
+    // 多选框选中数据
+    handleSelectionChange(selection) {
+      this.ids = selection.map(item => item.userId)
+      this.single = selection.length !== 1
+      this.multiple = !selection.length
+    },
+    /** 排序回调函数 */
+    handleSortChang(column, prop, order) {
+      prop = column.prop
+      order = column.order
+      if (this.order !== '' && this.order !== prop + 'Order') {
+        this.queryParams[this.order] = undefined
+      }
+      if (order === 'descending') {
+        this.queryParams[prop + 'Order'] = 'desc'
+        this.order = prop + 'Order'
+      } else if (order === 'ascending') {
+        this.queryParams[prop + 'Order'] = 'asc'
+        this.order = prop + 'Order'
+      } else {
+        this.queryParams[prop + 'Order'] = undefined
+      }
+      this.getList()
+    },
     search() {
     },
     handleNodeClick(data) {
@@ -156,111 +267,15 @@ export default {
 </script>
 
 <style>
-.document_card {
-  width: 150px;
-  height: 195px;
-  max-height: 260px;
-  margin-right: 10px;
-  margin-bottom: 10px;
-  cursor: pointer;
-}
-<!-- .card-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  padding: 30px;
-  background-color: #f5f7fa; /* Element UI 默认的背景色 */
-  border: 1px solid #dcdfe6; /* Element UI 默认的边框颜色 */
-  border-radius: 4px; /* 圆角边框 */
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1); /* 阴影效果，符合 Element UI 风格 */
-} -->
 .card-container {
   display: flex;
   flex-wrap: wrap;
   justify-content: center; /* 水平居中 */
   align-items: center; /* 垂直居中 */
-  padding: 30px;
+  padding: 3px;
   background-color: #f5f7fa; /* Element UI 默认的背景色 */
   border: 1px solid #dcdfe6; /* Element UI 默认的边框颜色 */
   border-radius: 4px; /* 圆角边框 */
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1); /* 阴影效果，符合 Element UI 风格 */
-}
-
-.cardImage {
-  width: 150px;
-  height: 150px;
-  display: block;
-  margin: 0 auto;
-}
-
-.col {
-    margin-right: 1%;
-    float: left;
-    background-color: #fff;
-    overflow: hidden;
-}
-.four_col {
-    width: 20%;
-}
-
-.gray-light {
-    opacity: .3;
-}
-
-.title-bar {
-  background-color: rgba(29, 0, 252, 0.534);
-  height: 100px;
-  width: 2000px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.title {
-  color: white;
-  font-size: 24px;
-  font-weight: bold;
-  margin: 0;
-  padding: 0;
-}
-.ui-widget-header {
-    border: 1px solid #aaa;
-    background: #ccc 50% 50% repeat-x;
-    color: #222;
-    font-weight: 700
-}
-.header-button {
-    width: auto;
-    margin: 1.0rem 0.3rem;
-    background-color: transparent;
-    color: #ffffff;
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    font-size: 1.4rem;
-    font-weight: normal;
-    white-space: nowrap;
-    padding: 0.5rem 0.5rem;
-}
-.el-row {
-  margin-bottom: 20px;
-}
-
-.el-col {
-  display: flex;
-  align-items: center;
-}
-
-.el-button {
-  margin-left: 10px;
-}
-
-.tree-container {
-  width: 200px; /* 树型控件容器宽度 */
-  position: fixed;
-  left: 0;
-  top: 0;
-  height: 100%; /* 树型控件容器高度，可以根据需要调整 */
-  background-color: #f0f0f0; /* 树型控件容器背景色 */
-  padding: 20px;
-  overflow-y: auto; /* 如果内容超出高度，显示滚动条 */
 }
 </style>

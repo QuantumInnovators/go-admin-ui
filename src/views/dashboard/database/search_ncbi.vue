@@ -10,18 +10,6 @@
       <el-tabs v-model="activeName" type="border-card" @tab-click="handleClick">
         <el-tab-pane label="NCBI数据库" name="first">
           <el-card class="box-card">
-            <el-row>
-              <el-col :span="200">
-                <div class="title-bar">
-                  <el-col span="24" offset="10">
-                    <h1 class="title">DNA数据库系统</h1>
-                  </el-col>
-                  <el-col span="2" offset="2">
-                    <el-button class=".header-button" type="" @click="open">使用帮助</el-button>
-                  </el-col>
-                </div>
-              </el-col>
-            </el-row>
             <!-- <el-row :gutter="10" class="mb8">
               <el-col :span="1.5">
                 <el-button
@@ -217,14 +205,6 @@
                 <el-button @click="cancel">取 消</el-button>
               </div>
             </el-dialog>
-            <!-- 尾部 -->
-            <el-row>
-              <el-col :span="200">
-                <div class="title-bar">
-                  <el-col span="24" offset="10" />
-                </div>
-              </el-col>
-            </el-row>
           </el-card>
         </el-tab-pane>
         <el-tab-pane label="北京市本地数据库" name="second">
@@ -313,57 +293,6 @@
   </BasicLayout>
 </template>
 
-<style>
-  .el-upload__tip {
-    line-height: 1.2;
-  }
-  .el-row {
-    margin-bottom: 20px;
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
-  .el-col {
-    border-radius: 4px;
-  }
-  .bg-purple-dark {
-    background: #0269f9;
-  }
-  .bg-purple {
-    background: #f40494;
-  }
-  .bg-purple-light {
-    background: #ff1e38;
-  }
-  .grid-content {
-    border-radius: 4px;
-    min-height: 36px;
-  }
-  .row-bg {
-    padding: 10px 0;
-    background-color: #1a65fb;
-  }
-  .title-bar {
-    background-color: rgba(29, 0, 252, 0.534);
-    height: 100px;
-    width: 2000px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .header-button {
-    width: auto;
-    margin: 1.0rem 0.3rem;
-    background-color: transparent;
-    color: #ffffff;
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    font-size: 1.4rem;
-    font-weight: normal;
-    white-space: nowrap;
-    padding: 0.5rem 0.5rem;
-}
-</style>
-
 <script>
 import {
   addSequence,
@@ -400,7 +329,7 @@ export default {
       typeOptions: [],
       sequenceList: [],
       headers: { Authorization: 'Bearer ' + getToken() },
-
+      value: '',
       // 关系表类型
 
       // 查询参数
