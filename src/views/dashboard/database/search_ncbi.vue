@@ -1,9 +1,5 @@
-/**
- * @FileDesc: 数据库浏览 根据搜索结果进行数据库浏览
- * @Author:
- * @Func: 能够浏览数据
- * @Components:
- */
+/** * @FileDesc: 数据库浏览 根据搜索结果进行数据库浏览 * @Author: * @Func:
+能够浏览数据 * @Components: */
 <template>
   <BasicLayout>
     <template #wrapper>
@@ -17,7 +13,11 @@
                     <h1 class="title">DNA数据库系统</h1>
                   </el-col>
                   <el-col span="2" offset="2">
-                    <el-button class=".header-button" type="" @click="open">使用帮助</el-button>
+                    <el-button
+                      class=".header-button"
+                      type=""
+                      @click="open"
+                    >使用帮助</el-button>
                   </el-col>
                 </div>
               </el-col>
@@ -201,15 +201,29 @@
             />
             <!-- 添加或修改对话框 -->
             <el-dialog :title="title" :visible.sync="open" width="500px">
-              <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+              <el-form
+                ref="form"
+                :model="form"
+                :rules="rules"
+                label-width="80px"
+              >
                 <el-form-item label="名称" prop="sequenceId">
-                  <el-input v-model="form.sequenceId" placeholder="请输入名称" />
+                  <el-input
+                    v-model="form.sequenceId"
+                    placeholder="请输入名称"
+                  />
                 </el-form-item>
                 <el-form-item label="描述" prop="sequenceDescription">
-                  <el-input v-model="form.sequenceDescription" placeholder="请输入描述" />
+                  <el-input
+                    v-model="form.sequenceDescription"
+                    placeholder="请输入描述"
+                  />
                 </el-form-item>
                 <el-form-item label="序列编码" prop="sequence">
-                  <el-input v-model="form.sequence" placeholder="请输入序列编码" />
+                  <el-input
+                    v-model="form.sequence"
+                    placeholder="请输入序列编码"
+                  />
                 </el-form-item>
               </el-form>
               <div slot="footer" class="dialog-footer">
@@ -314,53 +328,53 @@
 </template>
 
 <style>
-  .el-upload__tip {
-    line-height: 1.2;
+.el-upload__tip {
+  line-height: 1.2;
+}
+.el-row {
+  margin-bottom: 20px;
+  &:last-child {
+    margin-bottom: 0;
   }
-  .el-row {
-    margin-bottom: 20px;
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
-  .el-col {
-    border-radius: 4px;
-  }
-  .bg-purple-dark {
-    background: #0269f9;
-  }
-  .bg-purple {
-    background: #f40494;
-  }
-  .bg-purple-light {
-    background: #ff1e38;
-  }
-  .grid-content {
-    border-radius: 4px;
-    min-height: 36px;
-  }
-  .row-bg {
-    padding: 10px 0;
-    background-color: #1a65fb;
-  }
-  .title-bar {
-    background-color: rgba(29, 0, 252, 0.534);
-    height: 100px;
-    width: 2000px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .header-button {
-    width: auto;
-    margin: 1.0rem 0.3rem;
-    background-color: transparent;
-    color: #ffffff;
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    font-size: 1.4rem;
-    font-weight: normal;
-    white-space: nowrap;
-    padding: 0.5rem 0.5rem;
+}
+.el-col {
+  border-radius: 4px;
+}
+.bg-purple-dark {
+  background: #0269f9;
+}
+.bg-purple {
+  background: #f40494;
+}
+.bg-purple-light {
+  background: #ff1e38;
+}
+.grid-content {
+  border-radius: 4px;
+  min-height: 36px;
+}
+.row-bg {
+  padding: 10px 0;
+  background-color: #1a65fb;
+}
+.title-bar {
+  background-color: rgba(29, 0, 252, 0.534);
+  height: 100px;
+  width: 2000px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.header-button {
+  width: auto;
+  margin: 1rem 0.3rem;
+  background-color: transparent;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  font-size: 1.4rem;
+  font-weight: normal;
+  white-space: nowrap;
+  padding: 0.5rem 0.5rem;
 }
 </style>
 
@@ -373,6 +387,8 @@ import {
   updateSequence,
   uploadSequence
 } from '@/api/sequence/sequence'
+
+import { searchList } from '@/api/dashboard/database'
 
 import { getToken } from '@/utils/auth'
 
@@ -427,20 +443,25 @@ export default {
       uploadFilefileList: [],
       activeName: 'first',
       props: { multiple: true },
-      database_options: [{
-        value: 0,
-        label: '所有数据库'
-      }, {
-        value: 1,
-        label: '北京数据库'
-      }, {
-        value: 2,
-        label: 'NCBI数据库'
-      }]
+      database_options: [
+        {
+          value: 0,
+          label: '所有数据库'
+        },
+        {
+          value: 1,
+          label: '北京数据库'
+        },
+        {
+          value: 2,
+          label: 'NCBI数据库'
+        }
+      ]
     }
   },
   created() {
-    this.getList()
+    // this.getList()
+    this.getListBySearch()
   },
   methods: {
     /***/
@@ -604,6 +625,26 @@ export default {
       //   this.$message.error('应该选择.fasta类型的文件')
       // }
       // return isRightSize && isAccept
+    },
+    getListBySearch() {
+      this.loading = true
+      var source = 0
+      if (this.$route.query.source === 'ncbi') {
+        source = 1
+      } else if (this.$route.query.source === 'beijing') {
+        source = 2
+      }
+      var data = {
+        source: source,
+        key: this.$route.query.key,
+        pageIndex: 1,
+        pageSize: 10
+      }
+      searchList(data).then((response) => {
+        this.sequenceList = response.data.list
+        this.total = response.data.count
+        this.loading = false
+      })
     }
   }
 }
