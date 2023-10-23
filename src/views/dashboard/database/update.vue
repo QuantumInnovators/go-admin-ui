@@ -5,85 +5,71 @@
  * @Components:
  */
 <template>
-  <div>
-    <el-row>
-      <el-col :span="200">
-        <div class="title-bar">
-          <el-col span="24" offset="10">
-            <h1 class="title">DNA数据库系统</h1>
-          </el-col>
-          <el-col span="2" offset="2">
-            <el-button class=".header-button" type="" @click="open">使用帮助</el-button>
-          </el-col>
+  <!-- 页签上传选中 -->
+  <el-tabs :tab-position="tabPosition" style="height: 800px;">
+    <el-tab-pane label="新增数据">
+      <div>
+        <el-col :span="24">
+          <el-form
+            ref="elForm"
+            :model="formData"
+            :rules="rules"
+            size="medium"
+            label-width="50px"
+            label-position="top"
+          >
+            <el-form-item label="编号">
+              <el-input v-model="formData.input1" />
+            </el-form-item>
+            <el-form-item label="拉丁文名">
+              <el-input v-model="formData.input2" />
+            </el-form-item>
+            <el-form-item label="数据库选中">
+              <el-autocomplete
+                v-model="formData.state1"
+                class="inline-input"
+                :fetch-suggestions="querySearch"
+                placeholder="请输入内容"
+                @select="handleSelect"
+              />
+            </el-form-item>
+            <el-form-item label="分类">
+              <el-autocomplete
+                v-model="formData.state1"
+                class="inline-input"
+                :fetch-suggestions="querySearch"
+                placeholder="请输入内容"
+                @select="handleSelect"
+              />
+            </el-form-item>
+            <el-form-item label="FASTA:" prop="el_input_textarea_fasta">
+              <el-input
+                v-model="formData.el_input_textarea_fasta"
+                type="textarea"
+                placeholder="请输入多行文本FASTA:"
+                :autosize="{minRows: 6, maxRows: 10}"
+                :style="{width: '100%'}"
+              />
+            </el-form-item>
+          </el-form>
+        </el-col>
+        <div v-if="savedData">
+          <strong>保存的内容:</strong>
+          <pre>{{ savedData }}</pre>
         </div>
-      </el-col>
-    </el-row>
-    <div>
-      <!-- 页签上传选中 -->
-      <el-tabs :tab-position="tabPosition" style="height: 800px;">
-        <el-tab-pane label="新增数据">
-          <div>
-            <el-col :span="24">
-              <el-form
-                ref="elForm"
-                :model="formData"
-                :rules="rules"
-                size="medium"
-                label-width="100px"
-                label-position="top"
-              >
-                <el-form-item label="编号">
-                  <el-input v-model="formData.input1" />
-                </el-form-item>
-                <el-form-item label="拉丁文名">
-                  <el-input v-model="formData.input2" />
-                </el-form-item>
-                <el-form-item label="数据库选中">
-                  <el-autocomplete
-                    v-model="formData.state1"
-                    class="inline-input"
-                    :fetch-suggestions="querySearch"
-                    placeholder="请输入内容"
-                    @select="handleSelect"
-                  />
-                </el-form-item>
-                <el-form-item label="分类">
-                  <el-autocomplete
-                    v-model="formData.state1"
-                    class="inline-input"
-                    :fetch-suggestions="querySearch"
-                    placeholder="请输入内容"
-                    @select="handleSelect"
-                  />
-                </el-form-item>
-                <el-form-item label="FASTA:" prop="el_input_textarea_fasta">
-                  <el-input
-                    v-model="formData.el_input_textarea_fasta"
-                    type="textarea"
-                    placeholder="请输入多行文本FASTA:"
-                    :autosize="{minRows: 6, maxRows: 10}"
-                    :style="{width: '100%'}"
-                  />
-                </el-form-item>
-              </el-form>
-            </el-col>
-            <div v-if="savedData">
-              <strong>保存的内容:</strong>
-              <pre>{{ savedData }}</pre>
-            </div>
-            <el-row>
-              <el-button type="primary">保存</el-button>
-              <el-button type="primary">提交</el-button>
-            </el-row>
-          </div>
-        </el-tab-pane>
-        <el-tab-pane label="文件上传">
-          <div :span="10">
-            <el-input
-              v-model="fastaContent"
-              type="textarea"
-              :rows="10"
-              placeholder="Prepare your sequence(s) in the FASTA format that starts with a definition line, followed with a hard return and the sequence. The simplest definition line requires the “> “symbol and a sequence_ID.
+        <el-row>
+          <el-button type="primary">保存</el-button>
+          <el-button type="primary">提交</el-button>
+        </el-row>
+      </div>
+    </el-tab-pane>
+    <el-tab-pane label="文件上传">
+      <div :span="10">
+        <el-input
+          v-model="fastaContent"
+          type="textarea"
+          :rows="10"
+          placeholder="Prepare your sequence(s) in the FASTA format that starts with a definition line, followed with a hard return and the sequence. The simplest definition line requires the “> “symbol and a sequence_ID.
 
 Example:
 
@@ -92,62 +78,52 @@ CCTTTAT...
 >Seq2
 GGTAGGT...
 Use only ASCII characters for your definition line and IUPAC codes for your sequences. Upload a FASTA file as a plain-text file (prepared with a text editor). The file may have one or more sequences."
-            />
-          </div>
-          <div :span="10">
-            <el-form
-              ref="uploadForm"
-              :model="formData"
-              :rules="rules"
-              size="big"
-              label-width="100px"
+        />
+      </div>
+      <div :span="10">
+        <el-form
+          ref="uploadForm"
+          :model="formData"
+          :rules="rules"
+          size="big"
+          label-width="100px"
+        >
+          <el-form-item label="上传" prop="uploadFile" required>
+            <el-upload
+              ref="uploadFile"
+              :headers="headers"
+              :file-list="uploadFilefileList"
+              :action="uploadFileAction"
+              :before-upload="uploadFileBeforeUpload"
+              accept=".fasta,.xlsx,.xls"
+              name="file"
+              :data="uploadParams"
+              :on-success="uploadActionSuccess"
             >
-              <el-form-item label="上传" prop="uploadFile" required>
-                <el-upload
-                  ref="uploadFile"
-                  :headers="headers"
-                  :file-list="uploadFilefileList"
-                  :action="uploadFileAction"
-                  :before-upload="uploadFileBeforeUpload"
-                  accept=".fasta,.xlsx,.xls"
-                  name="file"
-                  :data="uploadParams"
-                  :on-success="uploadActionSuccess"
-                >
-                  <el-button
-                    size="big"
-                    type="primary"
-                    icon="el-icon-upload"
-                  >点击上传</el-button>
-                </el-upload>
-              </el-form-item>
-              <el-form-item label="分类">
-                <el-autocomplete
-                  v-model="formData.state1"
-                  class="inline-input"
-                  :fetch-suggestions="querySearch"
-                  placeholder="请输入内容"
-                  @select="handleSelect"
-                />
-              </el-form-item>
-              <el-form-item size="large">
-                <el-button type="primary" @click="submitUploadForm">提交</el-button>
-                <el-button @click="resetUploadForm">重置</el-button>
-              </el-form-item>
-            </el-form>
-          </div>
-        </el-tab-pane>
-      </el-tabs>
-    </div>
-    <!-- 尾部 -->
-    <el-row>
-      <el-col :span="200">
-        <div class="title-bar">
-          <el-col span="24" offset="10" />
-        </div>
-      </el-col>
-    </el-row>
-
+              <el-button
+                size="big"
+                type="primary"
+                icon="el-icon-upload"
+              >点击上传</el-button>
+            </el-upload>
+          </el-form-item>
+          <el-form-item label="分类">
+            <el-autocomplete
+              v-model="formData.state1"
+              class="inline-input"
+              :fetch-suggestions="querySearch"
+              placeholder="请输入内容"
+              @select="handleSelect"
+            />
+          </el-form-item>
+          <el-form-item size="large">
+            <el-button type="primary" @click="submitUploadForm">提交</el-button>
+            <el-button @click="resetUploadForm">重置</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
+    </el-tab-pane>
+  </el-tabs>
   </div>
 </template>
 

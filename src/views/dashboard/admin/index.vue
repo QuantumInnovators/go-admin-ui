@@ -18,7 +18,7 @@
         </chart-card>
       </el-col>
       <el-col :sm="24" :xs="24" :md="6" :xl="6" :lg="6" :style="{ marginBottom: '12px' }">
-        <chart-card title="访问量" :total="8846">
+        <chart-card title="NCBI数据量" :total="8846">
           <el-tooltip slot="action" class="item" effect="dark" content="指标说明" placement="top-start">
             <i class="el-icon-warning-outline" />
           </el-tooltip>
@@ -29,7 +29,7 @@
         </chart-card>
       </el-col>
       <el-col :sm="24" :xs="24" :md="6" :xl="6" :lg="6" :style="{ marginBottom: '12px' }">
-        <chart-card title="有效数据" :total="6560">
+        <chart-card title="北京数据量" :total="6560">
           <el-tooltip slot="action" class="item" effect="dark" content="指标说明" placement="top-start">
             <i class="el-icon-warning-outline" />
           </el-tooltip>
