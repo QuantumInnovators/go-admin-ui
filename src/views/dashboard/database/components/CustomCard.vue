@@ -78,12 +78,4 @@ export default {
 .description {
   margin-bottom: 10px;
 }
-
-.button {
-  margin-bottom: 10px;
-}
-/* 自定义图标样式 */
-.custom-icon {
-  /* 可以添加其他自定义样式 */
-}
 </style>
