@@ -15,10 +15,21 @@
             label-position="top"
           >
             <el-form-item label="编号">
-              <el-input v-model="formData.input1" />
+              <el-col :span="2.5">
+                <el-input
+                  v-model="formData.input1"
+                  placeholder="请输入编号"
+                />
+              </el-col>
             </el-form-item>
             <el-form-item label="拉丁文名">
-              <el-input v-model="formData.input2" />
+              <el-col :span="2.5">
+                <el-input
+                  v-model="formData.input2"
+                  placeholder="请输入拉丁文名"
+                />
+              </el-col>
+
             </el-form-item>
             <el-form-item label="数据库选中">
               <el-autocomplete
@@ -62,7 +73,7 @@
     <el-tab-pane label="文件上传">
       <div :span="10">
         <el-input
-          v-model="fastaContent"
+          readonly="true"
           type="textarea"
           :rows="10"
           placeholder="Prepare your sequence(s) in the FASTA format that starts with a definition line, followed with a hard return and the sequence. The simplest definition line requires the “> “symbol and a sequence_ID.
@@ -76,6 +87,11 @@ GGTAGGT...
 Use only ASCII characters for your definition line and IUPAC codes for your sequences. Upload a FASTA file as a plain-text file (prepared with a text editor). The file may have one or more sequences."
         />
       </div>
+      <el-row>
+        <p>
+          上传文件目前仅支持 fasta,excel
+        </p>
+      </el-row>
       <div :span="10">
         <el-form
           ref="uploadForm"

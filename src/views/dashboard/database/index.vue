@@ -21,7 +21,20 @@
             </el-col>
           </div>
         </el-row>
-        <el-col :span="24">
+        <el-row>
+          <div class="twelve_col last">
+            <h1>欢迎使用 环境DNA数据库管理系统</h1>
+            <p>The National Center for Biotechnology Information
+              advances science and health by providing access to
+              biomedical and genomic information.</p>
+            <el-row>
+              <ul class="about_links">
+                <li><a href="/about/">About the NCBI</a> </li>
+              </ul>
+            </el-row>
+          </div>
+        </el-row>
+        <el-col :span="14">
           <el-row :gutter="5">
             <el-col v-for="(card, index) in cards" :key="index" :span="8">
               <CustomCard
@@ -55,35 +68,35 @@ export default {
           titlename: 'NCBI数据库',
           description: 'Deposit data or manuscripts into NCBI databases',
           imgUrl: require('@/assets/logo/logo.png'),
-          pageUrl: '/dashboard/database/search_ncbi'
+          pageUrl: '/database/search_ncbi'
         },
         {
           titlename: '北京数据库',
-          description: 'Deposit data or manuscripts into NCBI databases',
+          description: '北京本地数据库',
           imgUrl: require('@/assets/logo/logo.png'),
-          pageUrl: '/dashboard/database/search_ncbi'
+          pageUrl: '/database/search_ncbi'
         },
         {
           titlename: '物种分类  ',
-          description: 'Deposit data or manuscripts into NCBI databases',
+          description: '数据库物种信息分类',
           imgUrl: require('@/assets/logo/logo.png'),
           pageUrl: '/dashboard/taxonomy/index'
         },
         {
           titlename: '上传',
-          description: 'Deposit data or manuscripts into NCBI databases',
+          description: '数据库上传',
           imgUrl: require('@/assets/logo/logo.png'),
           pageUrl: '/dashboard/database/update'
         },
         {
           titlename: '管理',
-          description: 'Deposit data or manuscripts into NCBI databases',
+          description: '数据库系统管理',
           imgUrl: require('@/assets/logo/logo.png'),
-          pageUrl: '/dashboard/taxonomy/index'
+          pageUrl: '/analysis/analysis_overview'
         },
         {
           titlename: 'DNA分析',
-          description: 'Deposit data or manuscripts into NCBI databases',
+          description: '根据项目进行DNA分析',
           imgUrl: require('@/assets/logo/logo.png'),
           pageUrl: '/analysis/analysis_overview'
         }
@@ -138,5 +151,9 @@ export default {
   padding: 14px 0 10px 0;
   display: block;
   font-family: 'Roboto', 'Helvetica Neue', Arial, Tahoma;
+}
+.about_links {
+  padding: 0;
+  margin: 1em 0 1em 1em
 }
 </style>

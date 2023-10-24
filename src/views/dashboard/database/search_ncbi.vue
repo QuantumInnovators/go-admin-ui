@@ -119,14 +119,6 @@
           </el-card>
         </el-tab-pane>
         <el-tab-pane label="北京市本地数据库" name="second">
-          北京市本地数据库
-          <pagination
-            v-show="total > 0"
-            :total="total"
-            :page.sync="queryParams.pageIndex"
-            :limit.sync="queryParams.pageSize"
-            @pagination="getList"
-          />
           <el-table
             v-loading="loading"
             :data="sequenceList"
@@ -198,6 +190,13 @@
               </template>
             </el-table-column>
           </el-table>
+          <pagination
+            v-show="total > 0"
+            :total="total"
+            :page.sync="queryParams.pageIndex"
+            :limit.sync="queryParams.pageSize"
+            @pagination="getList"
+          />
         </el-tab-pane>
       </el-tabs>
     </template>
