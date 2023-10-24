@@ -1,77 +1,66 @@
 <template>
-  <div>
-    <el-form
-      ref="elForm"
-      :model="formData"
-      :rules="rules"
-      size="medium"
-      label-width="0px"
-      label-position="top"
-    >
-      <el-form-item label="分析导航" prop="field113">
-        <el-input
-          v-model="formData.field113"
-          type="textarea"
-          placeholder="分析导航提供微生物多样性数据分析整体导览图，可通过导览图定制分析流程；分析指南通过真实的文献分析案例引导您快速开启微生物多样性数据分析之旅。分析导航"
-          readonly
-          :autosize="{minRows: 4, maxRows: 4}"
-          :style="{width: '100%'}"
-        />
-      </el-form-item>
-      <el-form-item label="分析软件信息" prop="field115">
-        <el-input
-          v-model="formData.field115"
-          type="textarea"
-          placeholder="展示该项目下各分析所用分析软件及其版本号等信息。"
-          readonly
-          :autosize="{minRows: 4, maxRows: 4}"
-          :style="{width: '100%'}"
-        />
-      </el-form-item>
-    </el-form>
-  </div>
-</template>
-<script>
-export default {
-  components: {},
-  props: [],
-  data() {
-    return {
-      formData: {
-        field113: '分析导航提供微生物多样性数据分析整体导览图，可通过导览图定制分析流程；分析指南通过真实的文献分析案例引导您快速开启微生物多样性数据分析之旅。',
-        field115: '展示该项目下各分析所用分析软件及其版本号等信息。'
-      },
-      rules: {
-        field113: [{
-          required: true,
-          message: '分析导航提供微生物多样性数据分析整体导览图，可通过导览图定制分析流程；分析指南通过真实的文献分析案例引导您快速开启微生物多样性数据分析之旅。分析导航',
-          trigger: 'blur'
-        }],
-        field115: [{
-          required: true,
-          message: '展示该项目下各分析所用分析软件及其版本号等信息。',
-          trigger: 'blur'
-        }]
-      }
-    }
-  },
-  computed: {},
-  watch: {},
-  created() {},
-  mounted() {},
-  methods: {
-    submitForm() {
-      this.$refs['elForm'].validate(valid => {
-        if (!valid) return
-        // TODO 提交表单
-      })
-    },
-    resetForm() {
-      this.$refs['elForm'].resetFields()
-    }
-  }
-}
+  <BasicLayout>
+    <template #wrapper>
+      <div class="box-card">
+        <div class="list-wrap" style="height: 1167px;">
+          <div class="report-item">
+            <a href="#1" class="">一 项目信息</a>
+          </div>
+          <div class="report-item">
+            <a href="#2" class="">二 流程说明</a>
+            <ul class="report-menu" style="display: none;">
+              <li><a href="#4" class="">2.1 测序实验流程</a></li>
+              <li><a href="#5">2.2 生物信息分析流程</a></li>
+            </ul>
+          </div>
+          <div class="report-item">
+            <a href="#3" class="current">三 分析报告</a>
+            <ul class="report-menu" style="display: block;">
+              <li><a href="#2434">3.1 分析管理</a></li>
+              <ul class="report-menu" style="display: none;">
+                <li><a href="#2437">3.1.1 分析软件信息</a></li>
+              </ul>
+              <li><a href="#6">3.2 数据信息管理</a></li>
+              <ul class="report-menu" style="display: none;">
+                <li><a href="#2438">3.2.1 样本信息管理</a></li>
+                <li><a href="#11">3.2.2 测序信息统计</a></li>
+              </ul>
+              <li><a href="#7">3.3 物种注释与评估</a></li>
+              <ul class="report-menu" style="display: none;">
+                <li><a href="#26">3.3.1 OTU分析</a></li>
+                <ul class="report-menu" style="display: none;">
+                  <li><a href="#27">3.3.1.1 分类学分析</a></li>
+                  <li><a href="#28">3.3.1.2 Pan/Core 物种分析</a></li>
+                </ul>
+                <li><a href="#20">3.3.2 Alpha多样性分析</a></li>
+                <ul class="report-menu" style="display: none;">
+                  <li><a href="#43">3.3.2.1 多样性指数</a></li>
+                </ul>
+                <li><a href="#21">3.3.3 稀释曲线分析</a></li>
+              </ul>
 
-</script>
-<style>
+              <li><a href="#10">3.4 物种组成分析</a></li>
+              <ul class="report-menu" style="display: none;">
+                <li><a href="#14">3.4.1 群落组成分析</a></li>
+                <ul class="report-menu" style="display: none;">
+                  <li><a href="#63">3.4.1.1 群落Bar图和Pie图</a></li>
+                  <li><a href="#62">3.4.1.2 群落Heatmap图</a></li>
+                </ul>
+                <li><a href="#48">3.4.2 样本与物种关系</a></li>
+              </ul>
+
+            </ul>
+          </div>
+        </div>
+      </div>
+    </template>
+  </basiclayout>
+</template>
+
+<style scoped>
+.report-view {
+  background: #fff;
+  line-height: 2;
+}
+.report-item{border-bottom:1px solid #ddd;overflow:hidden;}
 </style>
