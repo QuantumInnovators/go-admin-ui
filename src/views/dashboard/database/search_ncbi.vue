@@ -121,7 +121,7 @@
         <el-tab-pane label="北京市本地数据库" name="second">
           <el-table
             v-loading="loading"
-            :data="sequenceList"
+            :data="sequenceBeijingList"
             @selection-change="handleSelectionChange"
           >
             <el-table-column type="selection" width="55" align="center" />
@@ -240,6 +240,7 @@ export default {
       // 类型数据字典
       typeOptions: [],
       sequenceList: [],
+      sequenceBeijingList: [],
       headers: { Authorization: 'Bearer ' + getToken() },
       value: '',
       // 关系表类型
@@ -466,7 +467,19 @@ export default {
         pageSize: 10
       }
       searchList(data).then((response) => {
-        this.sequenceList = response.data.list
+        var dataList = response.data
+        console.log(response)
+        for (var i = 0; i < dataList.list.length; i++) {
+          console.log(dataList.list[i])
+          var list = dataList.list[i]
+          switch (list.source) {
+            case 1:
+              this.sequenceList = list.list
+              break
+            case 2:
+              this.sequenceBeijingList = list.list
+          }
+        }
         this.total = response.data.count
         this.loading = false
       })
