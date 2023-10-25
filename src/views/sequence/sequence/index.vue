@@ -220,7 +220,7 @@ import {
   getSequence,
   listSequence,
   updateSequence,
-  uploadSequence
+  uploadSequenceByFile
 } from '@/api/sequence/sequence'
 
 import { getToken } from '@/utils/auth'
@@ -405,7 +405,7 @@ export default {
         // console.log(this.uploadFilefileList)
         // if (!valid) return
         // TODO 提交表单
-        uploadSequence(this.path).then((response) => {
+        uploadSequenceByFile(this.path).then((response) => {
           if (response.code === 200) {
             this.msgSuccess(response.msg)
             this.open = false

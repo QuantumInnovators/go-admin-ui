@@ -52,7 +52,6 @@
                   >
                     <el-button
                       slot="reference"
-                      v-permisaction="['sequence:sequence:edit']"
                       size="mini"
                       type="text"
                       icon="el-icon-edit"
@@ -354,6 +353,7 @@ export default {
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
+      console.log('修改：' + row)
       this.reset()
       const id = row.id || this.ids
       getSequence(id).then((response) => {
