@@ -57,10 +57,10 @@
             </el-form-item>
           </el-form>
         </el-col>
-        <!-- <div v-if="savedData">
+        <div v-if="savedData">
           <strong>保存的内容:</strong>
           <pre>{{ savedData }}</pre>
-        </div> -->
+        </div>
         <el-row>
           <el-button type="primary">保存</el-button>
           <el-button type="primary" @click="submitForm">提交</el-button>
@@ -217,11 +217,11 @@ export default {
     loadAll() {
       return [
         // 分类选项
-        { label: '浮游动物', value: '浮游动物' },
-        { label: '浮游植物', value: '浮游植物' },
-        { label: '底栖动物', value: '底栖动物' },
-        { label: '水生植物', value: '水生植物' },
-        { label: '鱼类', value: '鱼类' }
+        { value: '浮游动物', address: '浮游动物' },
+        { value: '浮游植物', address: '浮游植物' },
+        { value: '底栖动物', address: '底栖动物' },
+        { value: '水生植物', address: '水生植物' },
+        { value: '鱼类', address: '鱼类' }
       ]
     },
     handleSelect(item) {
