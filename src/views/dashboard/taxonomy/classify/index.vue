@@ -39,7 +39,7 @@ export default {
   data() {
     return {
       cards: [
-        { titlename: '新建分类数据集', imgUrl: require('@/assets/logo/logo.png'), buttonTitles: ['进入'], pageUrl: '/dashboard/taxonomy/classify/index' },
+        { titlename: '新建分类数据集', imgUrl: require('@/assets/logo/logo.png'), buttonTitles: ['进入'], pageUrl: '/dashboard/taxonomy/classify/submit' },
         { titlename: '浮游动物', imgUrl: require('@/assets/logo/logo.png'), buttonTitles: ['进入'], pageUrl: '/database/search_ncbi' },
         { titlename: '浮游植物', imgUrl: require('@/assets/logo/logo.png'), buttonTitles: ['进入'], pageUrl: '/profile/index' }
         // ... 其他卡片的属性

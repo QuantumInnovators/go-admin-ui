@@ -119,7 +119,7 @@ export default {
         key: this.searchText
       }
       this.$router.push({
-        path: '/dashboard/database/search_ncbi',
+        path: '/database/search_ncbi',
         query: query
       })
     },
