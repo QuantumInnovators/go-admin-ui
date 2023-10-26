@@ -13,16 +13,22 @@
             >
               <el-table-column type="selection" width="55" align="center" />
               <el-table-column
-                label="名称"
+                label="ID"
                 prop="sequenceId"
                 :show-overflow-tooltip="true"
                 width="100"
               />
               <el-table-column
-                label="描述"
-                prop="sequenceDescription"
+                label="中文名称"
+                prop="nameCN"
                 :show-overflow-tooltip="true"
-                width="300"
+                width="100"
+              />
+              <el-table-column
+                label="拉丁文名称"
+                prop="name"
+                :show-overflow-tooltip="true"
+                width="100"
               />
               <el-table-column
                 label="序列编码"
@@ -37,6 +43,13 @@
                 prop="sequence"
                 :show-overflow-tooltip="true"
                 width="300"
+              />
+              <el-table-column
+                label="类型"
+                sortable="custom"
+                prop="type"
+                :show-overflow-tooltip="true"
+                width="100"
               />
               <el-table-column
                 label="操作"
@@ -125,16 +138,28 @@
           >
             <el-table-column type="selection" width="55" align="center" />
             <el-table-column
-              label="名称"
+              label="ID"
               prop="sequenceId"
               :show-overflow-tooltip="true"
               width="100"
             />
             <el-table-column
-              label="描述"
-              prop="sequenceDescription"
+              label="中文名称"
+              prop="nameCN"
               :show-overflow-tooltip="true"
-              width="300"
+              width="100"
+            />
+            <el-table-column
+              label="拉丁文名称"
+              prop="name"
+              :show-overflow-tooltip="true"
+              width="100"
+            />
+            <el-table-column
+              label="引物名称"
+              prop="primerName"
+              :show-overflow-tooltip="true"
+              width="100"
             />
             <el-table-column
               label="序列编码"
@@ -149,6 +174,13 @@
               prop="sequence"
               :show-overflow-tooltip="true"
               width="300"
+            />
+            <el-table-column
+              label="类型"
+              sortable="custom"
+              prop="type"
+              :show-overflow-tooltip="true"
+              width="100"
             />
             <el-table-column
               label="操作"

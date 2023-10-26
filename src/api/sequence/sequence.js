@@ -52,8 +52,8 @@ export function delSequence(data) {
   })
 }
 
-// 删除Sequence
-export function uploadSequence(data) {
+// 更新Sequence
+export function uploadSequenceByFile(data) {
   console.log('data' + data.path)
   return request({
     url: '/api/v1/sequence/uploadFile',
