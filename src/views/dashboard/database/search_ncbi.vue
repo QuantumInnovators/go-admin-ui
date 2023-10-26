@@ -16,40 +16,40 @@
                 label="ID"
                 prop="sequenceId"
                 :show-overflow-tooltip="true"
-                width="100"
+                width="150"
               />
               <el-table-column
                 label="中文名称"
                 prop="nameCN"
                 :show-overflow-tooltip="true"
-                width="100"
+                width="120"
               />
               <el-table-column
                 label="拉丁文名称"
                 prop="name"
                 :show-overflow-tooltip="true"
-                width="100"
+                width="180"
               />
               <el-table-column
                 label="序列编码"
                 sortable="custom"
                 prop="sequence"
                 :show-overflow-tooltip="true"
-                width="600"
+                width="800"
               />
               <el-table-column
                 label="条形码"
                 sortable="custom"
                 prop="sequence"
                 :show-overflow-tooltip="true"
-                width="300"
+                width="200"
               />
               <el-table-column
                 label="类型"
                 sortable="custom"
                 prop="type"
                 :show-overflow-tooltip="true"
-                width="100"
+                width="180"
               />
               <el-table-column
                 label="操作"
@@ -131,103 +131,106 @@
           </el-card>
         </el-tab-pane>
         <el-tab-pane label="北京市本地数据库" name="second">
-          <el-table
-            v-loading="loading"
-            :data="sequenceBeijingList"
-            @selection-change="handleSelectionChange"
-          >
-            <el-table-column type="selection" width="55" align="center" />
-            <el-table-column
-              label="ID"
-              prop="sequenceId"
-              :show-overflow-tooltip="true"
-              width="100"
-            />
-            <el-table-column
-              label="中文名称"
-              prop="nameCN"
-              :show-overflow-tooltip="true"
-              width="100"
-            />
-            <el-table-column
-              label="拉丁文名称"
-              prop="name"
-              :show-overflow-tooltip="true"
-              width="100"
-            />
-            <el-table-column
-              label="引物名称"
-              prop="primerName"
-              :show-overflow-tooltip="true"
-              width="100"
-            />
-            <el-table-column
-              label="序列编码"
-              sortable="custom"
-              prop="sequence"
-              :show-overflow-tooltip="true"
-              width="600"
-            />
-            <el-table-column
-              label="条形码"
-              sortable="custom"
-              prop="sequence"
-              :show-overflow-tooltip="true"
-              width="300"
-            />
-            <el-table-column
-              label="类型"
-              sortable="custom"
-              prop="type"
-              :show-overflow-tooltip="true"
-              width="100"
-            />
-            <el-table-column
-              label="操作"
-              align="center"
-              class-name="small-padding fixed-width"
+          <el-card class="box-card">
+            <el-table
+              v-loading="loading"
+              :data="sequenceBeijingList"
+              @selection-change="handleSelectionChange"
             >
-              <template slot-scope="scope">
-                <el-popconfirm
-                  class="delete-popconfirm"
-                  title="确认要修改吗?"
-                  confirm-button-text="修改"
-                  @onConfirm="handleUpdate(scope.row)"
-                >
-                  <el-button
-                    slot="reference"
-                    v-permisaction="['sequence:sequence:edit']"
-                    size="mini"
-                    type="text"
-                    icon="el-icon-edit"
-                  >修改
-                  </el-button>
-                </el-popconfirm>
-                <el-popconfirm
-                  class="delete-popconfirm"
-                  title="确认要删除吗?"
-                  confirm-button-text="删除"
-                  @onConfirm="handleDelete(scope.row)"
-                >
-                  <el-button
-                    slot="reference"
-                    v-permisaction="['sequence:sequence:remove']"
-                    size="mini"
-                    type="text"
-                    icon="el-icon-delete"
-                  >删除
-                  </el-button>
-                </el-popconfirm>
-              </template>
-            </el-table-column>
-          </el-table>
-          <pagination
-            v-show="total > 0"
-            :total="total"
-            :page.sync="queryParams.pageIndex"
-            :limit.sync="queryParams.pageSize"
-            @pagination="getList"
-          />
+              <el-table-column type="selection" width="55" align="center" />
+              <el-table-column
+                label="ID"
+                prop="sequenceId"
+                :show-overflow-tooltip="true"
+                width="150"
+              />
+              <el-table-column
+                label="中文名称"
+                prop="nameCN"
+                :show-overflow-tooltip="true"
+                width="120"
+              />
+              <el-table-column
+                label="拉丁文名称"
+                prop="name"
+                :show-overflow-tooltip="true"
+                width="180"
+              />
+              <el-table-column
+                label="序列编码"
+                sortable="custom"
+                prop="sequence"
+                :show-overflow-tooltip="true"
+                width="800"
+              />
+              <el-table-column
+                label="条形码"
+                sortable="custom"
+                prop="sequence"
+                :show-overflow-tooltip="true"
+                width="200"
+              />
+              <el-table-column
+                label="引物名称"
+                prop="primerName"
+                :show-overflow-tooltip="true"
+                width="180"
+              />
+              <el-table-column
+                label="类型"
+                sortable="custom"
+                prop="type"
+                :show-overflow-tooltip="true"
+                width="150"
+              />
+              <el-table-column
+                label="操作"
+                align="center"
+                class-name="small-padding fixed-width"
+              >
+                <template slot-scope="scope">
+                  <el-popconfirm
+                    class="delete-popconfirm"
+                    title="确认要修改吗?"
+                    confirm-button-text="修改"
+                    @onConfirm="handleUpdate(scope.row)"
+                  >
+                    <el-button
+                      slot="reference"
+                      v-permisaction="['sequence:sequence:edit']"
+                      size="mini"
+                      type="text"
+                      icon="el-icon-edit"
+                    >修改
+                    </el-button>
+                  </el-popconfirm>
+                  <el-popconfirm
+                    class="delete-popconfirm"
+                    title="确认要删除吗?"
+                    confirm-button-text="删除"
+                    @onConfirm="handleDelete(scope.row)"
+                  >
+                    <el-button
+                      slot="reference"
+                      v-permisaction="['sequence:sequence:remove']"
+                      size="mini"
+                      type="text"
+                      icon="el-icon-delete"
+                    >删除
+                    </el-button>
+                  </el-popconfirm>
+                </template>
+              </el-table-column>
+            </el-table>
+            <pagination
+              v-show="total > 0"
+              :total="total"
+              :page.sync="queryParams.pageIndex"
+              :limit.sync="queryParams.pageSize"
+              @pagination="getList"
+            />
+          </el-card>
+
         </el-tab-pane>
       </el-tabs>
     </template>

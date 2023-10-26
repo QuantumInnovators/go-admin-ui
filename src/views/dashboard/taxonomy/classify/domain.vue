@@ -13,9 +13,9 @@
           <el-row>
             <el-form-item
               label="类别"
-              prop="categoryId"
+              prop="categoryName"
             ><el-input
-              v-model="queryParams.categoryId"
+              v-model="queryParams.categoryName"
               placeholder="请输入类别"
               clearable
               size="small"
@@ -25,9 +25,9 @@
 
             <el-form-item
               label="界"
-              prop="kingdomId"
+              prop="kingdomName"
             ><el-input
-              v-model="queryParams.kingdomId"
+              v-model="queryParams.kingdomName"
               placeholder="请输入界"
               clearable
               size="small"
@@ -36,9 +36,9 @@
             </el-form-item>
             <el-form-item
               label="门"
-              prop="phylumId"
+              prop="phylumName"
             ><el-input
-              v-model="queryParams.phylumId"
+              v-model="queryParams.phylumName"
               placeholder="请输入门"
               clearable
               size="small"
@@ -47,9 +47,9 @@
             </el-form-item>
             <el-form-item
               label="纲"
-              prop="classId"
+              prop="className"
             ><el-input
-              v-model="queryParams.classId"
+              v-model="queryParams.className"
               placeholder="请输入纲"
               clearable
               size="small"
@@ -60,9 +60,9 @@
 
           <el-form-item
             label="目"
-            prop="orderId"
+            prop="orderName"
           ><el-input
-            v-model="queryParams.orderId"
+            v-model="queryParams.orderName"
             placeholder="请输入目"
             clearable
             size="small"
@@ -71,9 +71,9 @@
           </el-form-item>
           <el-form-item
             label="科"
-            prop="familyId"
+            prop="familyName"
           ><el-input
-            v-model="queryParams.familyId"
+            v-model="queryParams.familyName"
             placeholder="请输入科"
             clearable
             size="small"
@@ -82,9 +82,9 @@
           </el-form-item>
           <el-form-item
             label="属"
-            prop="genusId"
+            prop="genusName"
           ><el-input
-            v-model="queryParams.genusId"
+            v-model="queryParams.genusName"
             placeholder="请输入属"
             clearable
             size="small"
@@ -93,9 +93,9 @@
           </el-form-item>
           <el-form-item
             label="种"
-            prop="speciesId"
+            prop="speciesName"
           ><el-input
-            v-model="queryParams.speciesId"
+            v-model="queryParams.speciesName"
             placeholder="请输入种"
             clearable
             size="small"
@@ -127,81 +127,81 @@
         </el-form>
         <!-- 添加或修改对话框 -->
         <el-dialog :title="title" :visible.sync="open" width="500px">
-          <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-            <el-form-item label="类别" prop="categoryId">
-              <el-select v-model="form.categoryId" placeholder="请选择">
+          <el-form ref="metaList" :model="metaList" :rules="rules" label-width="80px">
+            <el-form-item label="类别" prop="categoryName">
+              <el-select v-model="metaList.categoryName" placeholder="请选择">
                 <el-option
-                  v-for="dict in categoryIdOptions"
+                  v-for="dict in metaList.categoryName"
                   :key="dict.value"
                   :label="dict.label"
                   :value="dict.value"
                 />
               </el-select>
             </el-form-item>
-            <el-form-item label="界" prop="kingdomId">
-              <el-select v-model="form.kingdomId" placeholder="请选择">
+            <el-form-item label="界" prop="kingdomName">
+              <el-select v-model="metaList.kingdomName" placeholder="请选择">
                 <el-option
-                  v-for="dict in kingdomIdOptions"
+                  v-for="dict in metaList.kingdomName"
                   :key="dict.value"
                   :label="dict.label"
                   :value="dict.value"
                 />
               </el-select>
             </el-form-item>
-            <el-form-item label="门" prop="phylumId">
-              <el-select v-model="form.phylumId" placeholder="请选择">
+            <el-form-item label="门" prop="phylumName">
+              <el-select v-model="metaList.phylumName" placeholder="请选择">
                 <el-option
-                  v-for="dict in phylumIdOptions"
+                  v-for="dict in metaList.phylumName"
                   :key="dict.value"
                   :label="dict.label"
                   :value="dict.value"
                 />
               </el-select>
             </el-form-item>
-            <el-form-item label="纲" prop="classId">
-              <el-select v-model="form.classId" placeholder="请选择">
+            <el-form-item label="纲" prop="className">
+              <el-select v-model="metaList.className" placeholder="请选择">
                 <el-option
-                  v-for="dict in classIdOptions"
+                  v-for="dict in metaList.className"
                   :key="dict.value"
                   :label="dict.label"
                   :value="dict.value"
                 />
               </el-select>
             </el-form-item>
-            <el-form-item label="目" prop="orderId">
-              <el-select v-model="form.orderId" placeholder="请选择">
+            <el-form-item label="目" prop="orderName">
+              <el-select v-model="metaList.orderName" placeholder="请选择">
                 <el-option
-                  v-for="dict in orderIdOptions"
+                  v-for="dict in metaList.orderName"
                   :key="dict.value"
                   :label="dict.label"
                   :value="dict.value"
                 />
               </el-select>
             </el-form-item>
-            <el-form-item label="科" prop="familyId">
-              <el-select v-model="form.familyId" placeholder="请选择">
+            <el-form-item label="科" prop="familyName">
+              <el-select v-model="metaList.familyName" placeholder="请选择">
                 <el-option
-                  v-for="dict in familyIdOptions"
+                  v-for="dict in metaList.familyName"
                   :key="dict.value"
                   :label="dict.label"
                   :value="dict.value"
                 />
               </el-select>
             </el-form-item>
-            <el-form-item label="属" prop="genusId">
-              <el-select v-model="form.genusId" placeholder="请选择">
+            <el-form-item label="属" prop="genusName">
+              <el-select v-model="metaList.genusName" placeholder="请选择">
                 <el-option
-                  v-for="dict in genusIdOptions"
+                  v-for="dict in metaList.genusName"
                   :key="dict.value"
                   :label="dict.label"
                   :value="dict.value"
                 />
               </el-select>
             </el-form-item>
-            <el-form-item label="种" prop="speciesId">
-              <el-select v-model="form.speciesId" placeholder="请选择">
+            <el-form-item label="种" prop="speciesName">
+              <el-select v-model="metaList.speciesName" placeholder="请选择">
                 <el-option
-                  v-for="dict in speciesIdOptions"
+                  v-for="dict in metaList.speciesName"
                   :key="dict.value"
                   :label="dict.label"
                   :value="dict.value"
@@ -399,21 +399,21 @@ export default {
         pageIndex: 1,
         pageSize: 10,
         categoryId: undefined,
-        category: undefined,
+        categoryName: undefined,
         kingdomId: undefined,
-        kingdom: undefined,
+        kingdomName: undefined,
         phylumId: undefined,
-        phylum: undefined,
+        phylumName: undefined,
         classId: undefined,
-        class: undefined,
+        className: undefined,
         orderId: undefined,
-        order: undefined,
+        orderName: undefined,
         familyId: undefined,
-        family: undefined,
+        familyName: undefined,
         genusId: undefined,
-        genus: undefined,
+        genusName: undefined,
         speciesId: undefined,
-        species: undefined
+        speciesName: undefined
       },
       // 表单参数
       form: {},
@@ -430,19 +430,6 @@ export default {
         genusId: [{ required: true, message: '属不能为空', trigger: 'blur' }],
         speciesId: [{ required: true, message: '种不能为空', trigger: 'blur' }]
       },
-      // 物种分类列表
-      classList: [
-        {
-          id: '1',
-          kingdom: '王小',
-          phylum: '123',
-          class: '123456',
-          order: '523',
-          family: '上海市普陀区金沙江路 1518 弄',
-          genus: '上海市普陀区金沙江路 1518 弄',
-          species: '上海市普陀区金沙江路 1518 弄'
-        }
-      ],
       // 分类名称
       deptspeciesClassificationName: undefined,
       cards: [
@@ -538,32 +525,7 @@ export default {
       getDomainList().then((response) => {
         console.log(response.data)
         this.classTreeListData = response.data.data
-        // 将json tree 格式数据展开为列表格式
-        this.classList = this.treeToList(this.classTreeListData)
       })
-    },
-    treeToList(data) {
-      // todo 将 json tree 格式数据展开为列表格式，遍历data获取所有没有children的数据
-      var temp = []
-      var forFn = function(data) {
-        for (var i = 0; i < data.length; i++) {
-          var obj = {}
-          obj.id = data[i].id
-          obj.kingdom = data[i].label
-          obj.phylum = data[i].label
-          obj.class = data[i].label
-          obj.order = data[i].label
-          obj.family = data[i].label
-          obj.genus = data[i].label
-          obj.species = data[i].label
-          temp.push(obj)
-          if (data[i].children) {
-            forFn(data[i].children)
-          }
-        }
-      }
-      forFn(data)
-      return temp
     },
     /** 查询参数列表 */
     getList() {
@@ -573,6 +535,7 @@ export default {
           this.metaList = response.data.list
           this.total = response.data.count
           this.loading = false
+          console.log(response.data.list)
         }
       )
     },
@@ -586,13 +549,21 @@ export default {
       this.form = {
         id: undefined,
         categoryId: undefined,
+        categoryName: undefined,
         kingdomId: undefined,
+        kingdomName: undefined,
         phylumId: undefined,
+        phylumName: undefined,
         classId: undefined,
+        className: undefined,
         orderId: undefined,
+        orderName: undefined,
         familyId: undefined,
+        familyName: undefined,
         genusId: undefined,
-        speciesId: undefined
+        genusName: undefined,
+        speciesId: undefined,
+        speciesName: undefined
       }
       this.resetForm('form')
     },
@@ -619,7 +590,7 @@ export default {
     handleAdd() {
       this.reset()
       this.open = true
-      this.title = '添加Meta'
+      this.title = '添加分类信息'
       this.isEdit = false
     },
     // 多选框选中数据
@@ -635,7 +606,7 @@ export default {
       getMeta(id).then((response) => {
         this.form = response.data
         this.open = true
-        this.title = '修改Meta'
+        this.title = '修改分类信息'
         this.isEdit = true
       })
     },
