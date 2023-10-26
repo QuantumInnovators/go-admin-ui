@@ -4,10 +4,17 @@
   <BasicLayout>
     <template #wrapper>
       <el-card class="box-card">
-        <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
+        <el-form
+          ref="queryForm"
+          :model="queryParams"
+          :inline="true"
+          label-width="68px"
+        >
           <el-row>
-
-            <el-form-item label="类别" prop="categoryId"><el-input
+            <el-form-item
+              label="类别"
+              prop="categoryId"
+            ><el-input
               v-model="queryParams.categoryId"
               placeholder="请输入类别"
               clearable
@@ -16,7 +23,10 @@
             />
             </el-form-item>
 
-            <el-form-item label="界" prop="kingdomId"><el-input
+            <el-form-item
+              label="界"
+              prop="kingdomId"
+            ><el-input
               v-model="queryParams.kingdomId"
               placeholder="请输入界"
               clearable
@@ -24,7 +34,10 @@
               @keyup.enter.native="handleQuery"
             />
             </el-form-item>
-            <el-form-item label="门" prop="phylumId"><el-input
+            <el-form-item
+              label="门"
+              prop="phylumId"
+            ><el-input
               v-model="queryParams.phylumId"
               placeholder="请输入门"
               clearable
@@ -32,7 +45,10 @@
               @keyup.enter.native="handleQuery"
             />
             </el-form-item>
-            <el-form-item label="纲" prop="classId"><el-input
+            <el-form-item
+              label="纲"
+              prop="classId"
+            ><el-input
               v-model="queryParams.classId"
               placeholder="请输入纲"
               clearable
@@ -40,10 +56,12 @@
               @keyup.enter.native="handleQuery"
             />
             </el-form-item>
-
           </el-row>
 
-          <el-form-item label="目" prop="orderId"><el-input
+          <el-form-item
+            label="目"
+            prop="orderId"
+          ><el-input
             v-model="queryParams.orderId"
             placeholder="请输入目"
             clearable
@@ -51,7 +69,10 @@
             @keyup.enter.native="handleQuery"
           />
           </el-form-item>
-          <el-form-item label="科" prop="familyId"><el-input
+          <el-form-item
+            label="科"
+            prop="familyId"
+          ><el-input
             v-model="queryParams.familyId"
             placeholder="请输入科"
             clearable
@@ -59,7 +80,10 @@
             @keyup.enter.native="handleQuery"
           />
           </el-form-item>
-          <el-form-item label="属" prop="genusId"><el-input
+          <el-form-item
+            label="属"
+            prop="genusId"
+          ><el-input
             v-model="queryParams.genusId"
             placeholder="请输入属"
             clearable
@@ -67,7 +91,10 @@
             @keyup.enter.native="handleQuery"
           />
           </el-form-item>
-          <el-form-item label="种" prop="speciesId"><el-input
+          <el-form-item
+            label="种"
+            prop="speciesId"
+          ><el-input
             v-model="queryParams.speciesId"
             placeholder="请输入种"
             clearable
@@ -77,8 +104,17 @@
           </el-form-item>
 
           <el-form-item>
-            <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-            <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+            <el-button
+              type="primary"
+              icon="el-icon-search"
+              size="mini"
+              @click="handleQuery"
+            >搜索</el-button>
+            <el-button
+              icon="el-icon-refresh"
+              size="mini"
+              @click="resetQuery"
+            >重置</el-button>
             <el-button
               v-permisaction="['sequence:meta:add']"
               type="primary"
@@ -92,12 +128,8 @@
         <!-- 添加或修改对话框 -->
         <el-dialog :title="title" :visible.sync="open" width="500px">
           <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-
             <el-form-item label="类别" prop="categoryId">
-              <el-select
-                v-model="form.categoryId"
-                placeholder="请选择"
-              >
+              <el-select v-model="form.categoryId" placeholder="请选择">
                 <el-option
                   v-for="dict in categoryIdOptions"
                   :key="dict.value"
@@ -107,10 +139,7 @@
               </el-select>
             </el-form-item>
             <el-form-item label="界" prop="kingdomId">
-              <el-select
-                v-model="form.kingdomId"
-                placeholder="请选择"
-              >
+              <el-select v-model="form.kingdomId" placeholder="请选择">
                 <el-option
                   v-for="dict in kingdomIdOptions"
                   :key="dict.value"
@@ -120,10 +149,7 @@
               </el-select>
             </el-form-item>
             <el-form-item label="门" prop="phylumId">
-              <el-select
-                v-model="form.phylumId"
-                placeholder="请选择"
-              >
+              <el-select v-model="form.phylumId" placeholder="请选择">
                 <el-option
                   v-for="dict in phylumIdOptions"
                   :key="dict.value"
@@ -133,10 +159,7 @@
               </el-select>
             </el-form-item>
             <el-form-item label="纲" prop="classId">
-              <el-select
-                v-model="form.classId"
-                placeholder="请选择"
-              >
+              <el-select v-model="form.classId" placeholder="请选择">
                 <el-option
                   v-for="dict in classIdOptions"
                   :key="dict.value"
@@ -146,10 +169,7 @@
               </el-select>
             </el-form-item>
             <el-form-item label="目" prop="orderId">
-              <el-select
-                v-model="form.orderId"
-                placeholder="请选择"
-              >
+              <el-select v-model="form.orderId" placeholder="请选择">
                 <el-option
                   v-for="dict in orderIdOptions"
                   :key="dict.value"
@@ -159,10 +179,7 @@
               </el-select>
             </el-form-item>
             <el-form-item label="科" prop="familyId">
-              <el-select
-                v-model="form.familyId"
-                placeholder="请选择"
-              >
+              <el-select v-model="form.familyId" placeholder="请选择">
                 <el-option
                   v-for="dict in familyIdOptions"
                   :key="dict.value"
@@ -172,10 +189,7 @@
               </el-select>
             </el-form-item>
             <el-form-item label="属" prop="genusId">
-              <el-select
-                v-model="form.genusId"
-                placeholder="请选择"
-              >
+              <el-select v-model="form.genusId" placeholder="请选择">
                 <el-option
                   v-for="dict in genusIdOptions"
                   :key="dict.value"
@@ -185,10 +199,7 @@
               </el-select>
             </el-form-item>
             <el-form-item label="种" prop="speciesId">
-              <el-select
-                v-model="form.speciesId"
-                placeholder="请选择"
-              >
+              <el-select v-model="form.speciesId" placeholder="请选择">
                 <el-option
                   v-for="dict in speciesIdOptions"
                   :key="dict.value"
@@ -231,49 +242,61 @@
           </el-col>
 
           <el-col :span="20" :xs="24">
-            <el-table v-loading="loading" :data="metaList" @selection-change="handleSelectionChange">
-              <el-table-column type="selection" width="55" align="center" /><el-table-column
+            <el-table
+              v-loading="loading"
+              :data="metaList"
+              @selection-change="handleSelectionChange"
+            >
+              <el-table-column
+                type="selection"
+                width="55"
+                align="center"
+              /><el-table-column
                 label="类别"
                 align="center"
-                prop="categoryId"
+                prop="categoryName"
                 :show-overflow-tooltip="true"
               /><el-table-column
                 label="界"
                 align="center"
-                prop="kingdomId"
+                prop="kingdomName"
                 :show-overflow-tooltip="true"
               /><el-table-column
                 label="门"
                 align="center"
-                prop="phylumId"
+                prop="phylumName"
                 :show-overflow-tooltip="true"
               /><el-table-column
                 label="纲"
                 align="center"
-                prop="classId"
+                prop="className"
                 :show-overflow-tooltip="true"
               /><el-table-column
                 label="目"
                 align="center"
-                prop="orderId"
+                prop="orderName"
                 :show-overflow-tooltip="true"
               /><el-table-column
                 label="科"
                 align="center"
-                prop="familyId"
+                prop="familyName"
                 :show-overflow-tooltip="true"
               /><el-table-column
                 label="属"
                 align="center"
-                prop="genusId"
+                prop="genusName"
                 :show-overflow-tooltip="true"
               /><el-table-column
                 label="种"
                 align="center"
-                prop="speciesId"
+                prop="speciesName"
                 :show-overflow-tooltip="true"
               />
-              <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+              <el-table-column
+                label="操作"
+                align="center"
+                class-name="small-padding fixed-width"
+              >
                 <template>
                   <el-button
                     v-permisaction="['sequence:meta:edit']"
@@ -298,7 +321,7 @@
             </el-table>
 
             <pagination
-              v-show="total>0"
+              v-show="total > 0"
               :total="total"
               :page.sync="queryParams.pageIndex"
               :limit.sync="queryParams.pageSize"
@@ -334,7 +357,13 @@
 // import Treeselect from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 import { getDomainList } from '@/api/dashboard/database'
-import { addMeta, delMeta, getMeta, listMeta, updateMeta } from '@/api/sequence/meta'
+import {
+  addMeta,
+  delMeta,
+  getMeta,
+  listMeta,
+  updateMeta
+} from '@/api/sequence/meta'
 
 export default {
   name: 'ClassManage',
@@ -385,13 +414,14 @@ export default {
         genus: undefined,
         speciesId: undefined,
         species: undefined
-
       },
       // 表单参数
-      form: {
-      },
+      form: {},
       // 表单校验
-      rules: { categoryId: [{ required: true, message: '类别不能为空', trigger: 'blur' }],
+      rules: {
+        categoryId: [
+          { required: true, message: '类别不能为空', trigger: 'blur' }
+        ],
         kingdomId: [{ required: true, message: '界不能为空', trigger: 'blur' }],
         phylumId: [{ required: true, message: '门不能为空', trigger: 'blur' }],
         classId: [{ required: true, message: '纲不能为空', trigger: 'blur' }],
@@ -538,11 +568,12 @@ export default {
     /** 查询参数列表 */
     getList() {
       this.loading = true
-      listMeta(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
-        this.metaList = response.data.list
-        this.total = response.data.count
-        this.loading = false
-      }
+      listMeta(this.addDateRange(this.queryParams, this.dateRange)).then(
+        (response) => {
+          this.metaList = response.data.list
+          this.total = response.data.count
+          this.loading = false
+        }
       )
     },
     // 取消按钮
@@ -553,7 +584,6 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-
         id: undefined,
         categoryId: undefined,
         kingdomId: undefined,
@@ -594,16 +624,15 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id)
+      this.ids = selection.map((item) => item.id)
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset()
-      const id =
-                row.id || this.ids
-      getMeta(id).then(response => {
+      const id = row.id || this.ids
+      getMeta(id).then((response) => {
         this.form = response.data
         this.open = true
         this.title = '修改Meta'
@@ -612,10 +641,10 @@ export default {
     },
     /** 提交按钮 */
     submitForm: function() {
-      this.$refs['form'].validate(valid => {
+      this.$refs['form'].validate((valid) => {
         if (valid) {
           if (this.form.id !== undefined) {
-            updateMeta(this.form).then(response => {
+            updateMeta(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess(response.msg)
                 this.open = false
@@ -625,7 +654,7 @@ export default {
               }
             })
           } else {
-            addMeta(this.form).then(response => {
+            addMeta(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess(response.msg)
                 this.open = false
@@ -646,18 +675,20 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(function() {
-        return delMeta({ 'ids': Ids })
-      }).then((response) => {
-        if (response.code === 200) {
-          this.msgSuccess(response.msg)
-          this.open = false
-          this.getList()
-        } else {
-          this.msgError(response.msg)
-        }
-      }).catch(function() {
       })
+        .then(function() {
+          return delMeta({ ids: Ids })
+        })
+        .then((response) => {
+          if (response.code === 200) {
+            this.msgSuccess(response.msg)
+            this.open = false
+            this.getList()
+          } else {
+            this.msgError(response.msg)
+          }
+        })
+        .catch(function() {})
     }
   }
 }
