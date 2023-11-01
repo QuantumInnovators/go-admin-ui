@@ -94,7 +94,7 @@
               :total="total"
               :page.sync="queryParams.pageIndex"
               :limit.sync="queryParams.pageSize"
-              @pagination="getList"
+              @pagination="getListBySearch"
             />
             <!-- 添加或修改对话框 -->
             <el-dialog :title="title" :visible.sync="open" width="500px">
@@ -227,10 +227,9 @@
               :total="total"
               :page.sync="queryParams.pageIndex"
               :limit.sync="queryParams.pageSize"
-              @pagination="getList"
+              @pagination="getListBySearch"
             />
           </el-card>
-
         </el-tab-pane>
       </el-tabs>
     </template>
@@ -498,8 +497,8 @@ export default {
       var data = {
         source: source,
         key: this.$route.query.key,
-        pageIndex: 1,
-        pageSize: 10
+        pageIndex: this.queryParams.pageIndex,
+        pageSize: this.queryParams.pageSize
       }
       searchList(data).then((response) => {
         var dataList = response.data

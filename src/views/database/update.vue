@@ -16,10 +16,7 @@
           >
             <el-form-item label="编号">
               <el-col :span="2.5">
-                <el-input
-                  v-model="formData.input1"
-                  placeholder="请输入编号"
-                />
+                <el-input v-model="formData.input1" placeholder="请输入编号" />
               </el-col>
             </el-form-item>
             <el-form-item label="拉丁文名">
@@ -29,7 +26,6 @@
                   placeholder="请输入拉丁文名"
                 />
               </el-col>
-
             </el-form-item>
             <el-form-item label="数据库">
               <el-radio-group v-model="formData.resource">
@@ -84,9 +80,7 @@ Use only ASCII characters for your definition line and IUPAC codes for your sequ
         />
       </div>
       <el-row>
-        <p>
-          上传文件目前仅支持 fasta,excel
-        </p>
+        <p>上传文件目前仅支持 fasta,excel</p>
       </el-row>
       <div :span="10">
         <el-form
@@ -248,8 +242,8 @@ export default {
     },
     uploadActionSuccess(response, file, fileList) {
       // 文件上传成功后的处理逻辑
+      console.log(response)
       this.path.path = response.data.path
-      console.log(this.path)
     },
     uploadFileBeforeUpload(file) {
       console.log(file)
