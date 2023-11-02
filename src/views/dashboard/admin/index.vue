@@ -2,7 +2,7 @@
   <div class="dashboard-editor-container">
     <el-row :gutter="12">
       <el-col :sm="24" :xs="24" :md="6" :xl="6" :lg="6" :style="{ marginBottom: '12px' }">
-        <chart-card title="总数据量" total="126,560">
+        <chart-card title="总数据量" :total="DataParams.Sum_Count">
           <el-tooltip slot="action" class="item" effect="dark" content="指标说明" placement="top-start">
             <i class="el-icon-warning-outline" />
           </el-tooltip>
@@ -18,7 +18,7 @@
         </chart-card>
       </el-col>
       <el-col :sm="24" :xs="24" :md="6" :xl="6" :lg="6" :style="{ marginBottom: '12px' }">
-        <chart-card title="NCBI数据量" :total="8846">
+        <chart-card title="NCBI数据量" :total="DataParams.Ncbi_Count">
           <el-tooltip slot="action" class="item" effect="dark" content="指标说明" placement="top-start">
             <i class="el-icon-warning-outline" />
           </el-tooltip>
@@ -29,7 +29,7 @@
         </chart-card>
       </el-col>
       <el-col :sm="24" :xs="24" :md="6" :xl="6" :lg="6" :style="{ marginBottom: '12px' }">
-        <chart-card title="北京数据量" :total="6560">
+        <chart-card title="北京数据量" :total="DataParams.Beijin_Count">
           <el-tooltip slot="action" class="item" effect="dark" content="指标说明" placement="top-start">
             <i class="el-icon-warning-outline" />
           </el-tooltip>
@@ -89,6 +89,24 @@
     <el-card :bordered="false" :body-style="{padding: '0'}">
       <div class="salesCard">
         <el-tabs>
+          <el-tab-pane label="科属占比">
+            <div class="home-index-box">
+              <!--饼状图and环形图-->
+              <div class="graph-pie-warp">
+                <el-row>
+                  <el-col :xl="8" :lg="8" :md="12" :sm="24" :xs="24">
+                    <div id="home_gathering_source" style="height: 300px; margin:30px 10px; padding: 0px;" />
+                  </el-col>
+                  <el-col :xl="8" :lg="8" :md="12" :sm="24" :xs="24">
+                    <rank-list title="界门数量" :list="rankspeciesList" />
+                  </el-col>
+                  <el-col :xl="8" :lg="8" :md="12" :sm="24" :xs="24">
+                    <rank-list title="科属数量" :list="rankspeciesList" />
+                  </el-col>
+                </el-row>
+              </div>
+            </div>
+          </el-tab-pane>
           <el-tab-pane label="属种分布">
             <el-row>
               <el-col :xl="16" :lg="12" :md="12" :sm="24" :xs="24">
@@ -109,21 +127,6 @@
               </el-col>
             </el-row>
           </el-tab-pane>
-          <el-tab-pane label="科属占比">
-            <div class="home-index-box">
-              <!--饼状图and环形图-->
-              <div class="graph-pie-warp">
-                <el-row :gutter="30">
-                  <el-col :span="12">
-                    <div
-                      id="home_gathering_source"
-                      style="height: 300px; margin:30px 10px; padding: 0px;"
-                    />
-                  </el-col>
-                </el-row>
-              </div>
-            </div>
-          </el-tab-pane>
         </el-tabs>
       </div>
     </el-card>
@@ -140,6 +143,8 @@ import MiniProgress from '@/components/MiniProgress'
 import RankList from '@/components/RankList/index'
 import Bar from '@/components/Bar.vue'
 import ECharts from 'echarts'
+import { searchList } from '@/api/dashboard/database'
+import { getDomainList } from '@/api/dashboard/database'
 const gatheringSourceOption = {
   title: {
     text: '科属占比:',
@@ -212,6 +217,8 @@ for (let i = 0; i < 7; i++) {
   })
 }
 
+const rankspeciesList = []
+
 export default {
   name: 'DashboardAdmin',
   components: {
@@ -225,13 +232,23 @@ export default {
   },
   data() {
     return {
+      // 总条数
+      DataParams: {
+        Ncbi_Count: 0,
+        Beijin_Count: 0,
+        Sum_Count: 0
+      },
       barData,
       barData2,
       rankList,
+      rankspeciesList,
+      classTreeListData: [], // 物种分类树状结构图
       gatheringSourceOption
     }
   },
   mounted() {
+    this.getTotalDomain()
+    this.getDataBaseData()// 数据库统计
     this.getProportionData()// 饼图的数据
   },
   methods: {
@@ -239,6 +256,7 @@ export default {
       ECharts.init(document.getElementById(domId), theme).setOption(opt)
       window.addEventListener('resize', () => {
         ECharts.init(document.getElementById(domId), theme).resize()
+        console.log(domId)
       })
     },
     // 获取饼图的数据
@@ -253,6 +271,73 @@ export default {
       ]
       this.gatheringSourceOption.series[0].data = sourceList
       this.eChartsInit('home_gathering_source', 'light', this.gatheringSourceOption)
+    },
+    // 获取物种信息
+    getTotalDomain() {
+      // 获取总的分类
+      getDomainList().then((response) => {
+        this.classTreeListData = response.data.data
+        console.log(this.classTreeListData)
+        for (let i = 0; i < this.classTreeListData[0].children.length; i++) {
+          rankspeciesList.push({
+            name: this.classTreeListData[0].label + ' ' + this.classTreeListData[0].children[i].label,
+            total: this.classTreeListData[0].children[i].children.length + ' 类'
+          })
+        }
+        for (let i = 0; i < this.classTreeListData[1].children.length; i++) {
+          rankspeciesList.push({
+            name: this.classTreeListData[1].label + ' ' + this.classTreeListData[0].children[i].label,
+            total: this.classTreeListData[1].children[i].children.length + ' 类'
+          })
+        }
+      })
+    },
+    // 获取数据库统计数据
+    getDataBaseData() {
+      var data = {
+        source: 1, // NCBI
+        pageIndex: 1,
+        pageSize: 10
+      }
+      searchList(data).then((response) => {
+        var dataList = response.data
+        console.log(response)
+        for (var i = 0; i < dataList.list.length; i++) {
+          var list = dataList.list[i]
+          switch (list.source) {
+            case 1:
+              this.DataParams.Ncbi_Count = list.count
+              this.DataParams.Sum_Count += list.count
+              break
+            case 2:
+              this.DataParams.Beijin_Count = list.count
+              break
+          }
+        }
+      })
+      var data2 = {
+        source: 2, // NCBI
+        pageIndex: 1,
+        pageSize: 10
+      }
+      searchList(data2).then((response) => {
+        var dataList = response.data
+        console.log(response)
+        for (var i = 0; i < dataList.list.length; i++) {
+          var list = dataList.list[i]
+          switch (list.source) {
+            case 1:
+              this.DataParams.Ncbi_Count = list.count
+              break
+            case 2:
+              this.DataParams.Beijin_Count = list.count
+              this.DataParams.Sum_Count += list.count
+              break
+          }
+        }
+      })
+      console.log(this.DataParams)
+      this.loading = false
     }
   }
 }
