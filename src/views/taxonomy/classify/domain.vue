@@ -335,16 +335,6 @@
               :limit.sync="queryParams.pageSize"
               @pagination="getList"
             /> -->
-            <!-- <el-row :gutter="20" class="mb8">
-              <el-col v-for="(card, index) in cards" :key="index" :span="5">
-                <SpeciesClassif
-                  :titlename_cn="card.titlename"
-                  :button-titles="card.buttonTitles"
-                  :img-url="card.imgUrl"
-                  :page-url="card.pageUrl"
-                />
-              </el-col>
-            </el-row> -->
           </el-col>
         </el-row>
       </el-card>
@@ -397,7 +387,10 @@ export default {
       // 查询参数
       queryParams: {
         pageIndex: 1,
-        pageSize: 10,
+        pageSize: 10
+      },
+      // 表单参数
+      form: {
         categoryId: undefined,
         categoryName: undefined,
         kingdomId: undefined,
@@ -415,8 +408,6 @@ export default {
         speciesId: undefined,
         speciesName: undefined
       },
-      // 表单参数
-      form: {},
       // 表单校验
       rules: {
         categoryId: [
@@ -433,37 +424,6 @@ export default {
       // 分类名称
       deptspeciesClassificationName: undefined,
       cards: [
-        // { titlename: '新建分类数据集', imgUrl: require('@/assets/logo/logo.png'), buttonTitles: ['进入'], pageUrl: '/dashboard/taxonomy/classify/index' },
-        {
-          titlename: '裸藻门',
-          imgUrl: require('@/assets/logo/logo.png'),
-          buttonTitles: ['进入'],
-          pageUrl: '/database/search_ncbi'
-        },
-        {
-          titlename: '蓝藻门',
-          imgUrl: require('@/assets/logo/logo.png'),
-          buttonTitles: ['进入'],
-          pageUrl: '/profile/index'
-        },
-        {
-          titlename: '绿藻门',
-          imgUrl: require('@/assets/logo/logo.png'),
-          buttonTitles: ['进入'],
-          pageUrl: '/profile/index'
-        },
-        {
-          titlename: '硅藻门',
-          imgUrl: require('@/assets/logo/logo.png'),
-          buttonTitles: ['进入'],
-          pageUrl: '/profile/index'
-        },
-        {
-          titlename: '甲藻门',
-          imgUrl: require('@/assets/logo/logo.png'),
-          buttonTitles: ['进入'],
-          pageUrl: '/profile/index'
-        }
       ],
       cards_2: [
         // ... 其他卡片的属性
@@ -485,13 +445,11 @@ export default {
   },
   created() {
     this.getTotalDomain()
+    this.getList()
   },
   methods: {
     /** 查询物种下拉树结构 */
     getTreeselect() {
-      // treeselect().then((response) => {
-      //   this.deptOptions = response.data
-      // })
     },
     // 筛选节点
     filterNode(value, data) {
@@ -530,12 +488,13 @@ export default {
     /** 查询参数列表 */
     getList() {
       this.loading = true
-      listMeta(this.addDateRange(this.queryParams, this.dateRange)).then(
+      console.log(this.queryParams)
+      listMeta(this.queryParams).then(
         (response) => {
           this.metaList = response.data.list
           this.total = response.data.count
           this.loading = false
-          console.log(response.data.list)
+          console.log(response.data)
         }
       )
     },
@@ -566,12 +525,6 @@ export default {
         speciesName: undefined
       }
       this.resetForm('form')
-    },
-    getImgList: function() {
-      this.form[this.fileIndex] = this.$refs['fileChoose'].resultList[0].fullUrl
-    },
-    fileClose: function() {
-      this.fileOpen = false
     },
     // 关系
     // 文件
