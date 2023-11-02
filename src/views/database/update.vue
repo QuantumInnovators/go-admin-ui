@@ -186,6 +186,8 @@ export default {
         ]
       },
       savedData: {}, // 保存的数据对象
+      path: {},
+      uploadRules: {},
       uploadFileAction:
         process.env.VUE_APP_BASE_API + '/api/v1/public/uploadFile',
       uploadParams: {
