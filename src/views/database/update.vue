@@ -2,36 +2,113 @@
 能够单条新增，fasta 文件上传，excel 上传 * @Components: */
 <template>
   <!-- 页签上传选中 -->
-  <el-tabs :tab-position="tabPosition" style="height: 800px">
-    <el-tab-pane label="新增数据">
-      <div>
-        <el-col :span="24">
+  <div class="custom-update-tabs">
+    <el-tabs :tab-position="tabPosition" style="height: 800px">
+      <el-tab-pane label="新增数据">
+        <div>
+          <el-col :span="24">
+            <el-form
+              ref="elForm"
+              :model="formData"
+              :rules="rules"
+              size="medium"
+              label-width="50px"
+              label-position="top"
+            >
+              <el-form-item label="编号">
+                <el-col :span="2.5">
+                  <el-input v-model="formData.input1" placeholder="请输入编号" />
+                </el-col>
+              </el-form-item>
+              <el-form-item label="拉丁文名">
+                <el-col :span="2.5">
+                  <el-input
+                    v-model="formData.input2"
+                    placeholder="请输入拉丁文名"
+                  />
+                </el-col>
+              </el-form-item>
+              <el-form-item label="数据库">
+                <el-radio-group v-model="formData.resource">
+                  <el-radio label="NCBI数据库" />
+                  <el-radio label="北京数据库" />
+                </el-radio-group>
+              </el-form-item>
+              <el-form-item label="分类">
+                <el-autocomplete
+                  v-model="formData.state1"
+                  class="inline-input"
+                  :fetch-suggestions="querySearch"
+                  placeholder="请输入内容"
+                  @select="handleSelect"
+                />
+              </el-form-item>
+              <el-form-item label="FASTA:" prop="el_input_textarea_fasta">
+                <el-input
+                  v-model="formData.el_input_textarea_fasta"
+                  type="textarea"
+                  placeholder="请输入多行文本FASTA:"
+                  :autosize="{ minRows: 6, maxRows: 10 }"
+                  :style="{ width: '100%' }"
+                />
+              </el-form-item>
+            </el-form>
+          </el-col>
+          <div v-if="savedData">
+            <strong>保存的内容:</strong>
+            <pre>{{ savedData }}</pre>
+          </div>
+          <el-row>
+            <el-button type="primary">保存</el-button>
+            <el-button type="primary" @click="submitForm">提交</el-button>
+          </el-row>
+        </div>
+      </el-tab-pane>
+      <el-tab-pane label="文件上传">
+        <div :span="10">
+          <el-input
+            type="textarea"
+            :rows="10"
+            placeholder="Prepare your sequence(s) in the FASTA format that starts with a definition line, followed with a hard return and the sequence. The simplest definition line requires the “> “symbol and a sequence_ID.
+
+Example:
+
+>Seq1
+CCTTTAT...
+>Seq2
+GGTAGGT...
+Use only ASCII characters for your definition line and IUPAC codes for your sequences. Upload a FASTA file as a plain-text file (prepared with a text editor). The file may have one or more sequences."
+          />
+        </div>
+        <el-row>
+          <p>上传文件目前仅支持 fasta,excel</p>
+        </el-row>
+        <div :span="10">
           <el-form
-            ref="elForm"
+            ref="uploadForm"
             :model="formData"
             :rules="rules"
-            size="medium"
-            label-width="50px"
-            label-position="top"
+            size="big"
+            label-width="100px"
           >
-            <el-form-item label="编号">
-              <el-col :span="2.5">
-                <el-input v-model="formData.input1" placeholder="请输入编号" />
-              </el-col>
-            </el-form-item>
-            <el-form-item label="拉丁文名">
-              <el-col :span="2.5">
-                <el-input
-                  v-model="formData.input2"
-                  placeholder="请输入拉丁文名"
-                />
-              </el-col>
-            </el-form-item>
-            <el-form-item label="数据库">
-              <el-radio-group v-model="formData.resource">
-                <el-radio label="NCBI数据库" />
-                <el-radio label="北京数据库" />
-              </el-radio-group>
+            <el-form-item label="上传" prop="uploadFile" required>
+              <el-upload
+                ref="uploadFile"
+                :headers="headers"
+                :file-list="uploadFilefileList"
+                :action="uploadFileAction"
+                :before-upload="uploadFileBeforeUpload"
+                accept=".fasta,.xlsx,.xls"
+                name="file"
+                :data="uploadParams"
+                :on-success="uploadActionSuccess"
+              >
+                <el-button
+                  size="big"
+                  type="primary"
+                  icon="el-icon-upload"
+                >点击上传</el-button>
+              </el-upload>
             </el-form-item>
             <el-form-item label="分类">
               <el-autocomplete
@@ -42,93 +119,23 @@
                 @select="handleSelect"
               />
             </el-form-item>
-            <el-form-item label="FASTA:" prop="el_input_textarea_fasta">
-              <el-input
-                v-model="formData.el_input_textarea_fasta"
-                type="textarea"
-                placeholder="请输入多行文本FASTA:"
-                :autosize="{ minRows: 6, maxRows: 10 }"
-                :style="{ width: '100%' }"
-              />
+            <el-form-item size="large">
+              <el-button type="primary" @click="submitUploadForm">提交</el-button>
+              <el-button @click="resetUploadForm">重置</el-button>
             </el-form-item>
           </el-form>
-        </el-col>
-        <div v-if="savedData">
-          <strong>保存的内容:</strong>
-          <pre>{{ savedData }}</pre>
         </div>
-        <el-row>
-          <el-button type="primary">保存</el-button>
-          <el-button type="primary" @click="submitForm">提交</el-button>
-        </el-row>
-      </div>
-    </el-tab-pane>
-    <el-tab-pane label="文件上传">
-      <div :span="10">
-        <el-input
-          type="textarea"
-          :rows="10"
-          placeholder="Prepare your sequence(s) in the FASTA format that starts with a definition line, followed with a hard return and the sequence. The simplest definition line requires the “> “symbol and a sequence_ID.
-
-Example:
-
->Seq1
-CCTTTAT...
->Seq2
-GGTAGGT...
-Use only ASCII characters for your definition line and IUPAC codes for your sequences. Upload a FASTA file as a plain-text file (prepared with a text editor). The file may have one or more sequences."
-        />
-      </div>
-      <el-row>
-        <p>上传文件目前仅支持 fasta,excel</p>
-      </el-row>
-      <div :span="10">
-        <el-form
-          ref="uploadForm"
-          :model="formData"
-          :rules="rules"
-          size="big"
-          label-width="100px"
-        >
-          <el-form-item label="上传" prop="uploadFile" required>
-            <el-upload
-              ref="uploadFile"
-              :headers="headers"
-              :file-list="uploadFilefileList"
-              :action="uploadFileAction"
-              :before-upload="uploadFileBeforeUpload"
-              accept=".fasta,.xlsx,.xls"
-              name="file"
-              :data="uploadParams"
-              :on-success="uploadActionSuccess"
-            >
-              <el-button
-                size="big"
-                type="primary"
-                icon="el-icon-upload"
-              >点击上传</el-button>
-            </el-upload>
-          </el-form-item>
-          <el-form-item label="分类">
-            <el-autocomplete
-              v-model="formData.state1"
-              class="inline-input"
-              :fetch-suggestions="querySearch"
-              placeholder="请输入内容"
-              @select="handleSelect"
-            />
-          </el-form-item>
-          <el-form-item size="large">
-            <el-button type="primary" @click="submitUploadForm">提交</el-button>
-            <el-button @click="resetUploadForm">重置</el-button>
-          </el-form-item>
-        </el-form>
-      </div>
-    </el-tab-pane>
-  </el-tabs>
+      </el-tab-pane>
+    </el-tabs>
+  </div>
 </template>
 
-<style>
+<style scoped>
+.custom-update-tabs >>> .el-tabs__item.is-active {
+background-color: #66c0fc; /* 设置激活时的背景颜色 */
+color: white; /* 设置激活时的文字颜色 */
+}
+
 .header-button {
   width: auto;
   margin: 1rem 0.3rem;

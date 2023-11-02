@@ -223,8 +223,8 @@
               </el-table-column>
             </el-table>
             <pagination
-              v-show="total > 0"
-              :total="total"
+              v-show="localTotal > 0"
+              :total="localTotal"
               :page.sync="queryParams.pageIndex"
               :limit.sync="queryParams.pageSize"
               @pagination="getListBySearch"
@@ -241,7 +241,6 @@ import {
   addSequence,
   delSequence,
   getSequence,
-  listSequence,
   updateSequence,
   uploadSequence
 } from '@/api/sequence/sequence'
@@ -265,6 +264,7 @@ export default {
       multiple: true,
       // 总条数
       total: 0,
+      localTotal: 0,
       // 弹出层标题
       title: '',
       // 是否显示弹出层
@@ -319,24 +319,12 @@ export default {
     }
   },
   created() {
-    // this.getList()
     this.getListBySearch()
   },
   methods: {
     /***/
     handleClick(tab, event) {
       console.log(tab, event)
-    },
-    /** 查询参数列表 */
-    getList() {
-      this.loading = true
-      listSequence(this.addDateRange(this.queryParams, this.dateRange)).then(
-        (response) => {
-          this.sequenceList = response.data.list
-          this.total = response.data.count
-          this.loading = false
-        }
-      )
     },
     // 取消按钮
     cancel() {
@@ -509,12 +497,13 @@ export default {
           switch (list.source) {
             case 1:
               this.sequenceList = list.list
+              this.total = list.count
               break
             case 2:
               this.sequenceBeijingList = list.list
+              this.localTotal = list.count
           }
         }
-        this.total = response.data.count
         this.loading = false
       })
     }

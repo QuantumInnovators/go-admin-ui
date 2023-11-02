@@ -327,24 +327,6 @@
               :limit.sync="queryParams.pageSize"
               @pagination="getList"
             />
-
-            <!-- <pagination
-              v-show="total>0"
-              :total="total"
-              :page.sync="queryParams.pageIndex"
-              :limit.sync="queryParams.pageSize"
-              @pagination="getList"
-            /> -->
-            <!-- <el-row :gutter="20" class="mb8">
-              <el-col v-for="(card, index) in cards" :key="index" :span="5">
-                <SpeciesClassif
-                  :titlename_cn="card.titlename"
-                  :button-titles="card.buttonTitles"
-                  :img-url="card.imgUrl"
-                  :page-url="card.pageUrl"
-                />
-              </el-col>
-            </el-row> -->
           </el-col>
         </el-row>
       </el-card>
@@ -432,42 +414,6 @@ export default {
       },
       // 分类名称
       deptspeciesClassificationName: undefined,
-      cards: [
-        // { titlename: '新建分类数据集', imgUrl: require('@/assets/logo/logo.png'), buttonTitles: ['进入'], pageUrl: '/dashboard/taxonomy/classify/index' },
-        {
-          titlename: '裸藻门',
-          imgUrl: require('@/assets/logo/logo.png'),
-          buttonTitles: ['进入'],
-          pageUrl: '/database/search_ncbi'
-        },
-        {
-          titlename: '蓝藻门',
-          imgUrl: require('@/assets/logo/logo.png'),
-          buttonTitles: ['进入'],
-          pageUrl: '/profile/index'
-        },
-        {
-          titlename: '绿藻门',
-          imgUrl: require('@/assets/logo/logo.png'),
-          buttonTitles: ['进入'],
-          pageUrl: '/profile/index'
-        },
-        {
-          titlename: '硅藻门',
-          imgUrl: require('@/assets/logo/logo.png'),
-          buttonTitles: ['进入'],
-          pageUrl: '/profile/index'
-        },
-        {
-          titlename: '甲藻门',
-          imgUrl: require('@/assets/logo/logo.png'),
-          buttonTitles: ['进入'],
-          pageUrl: '/profile/index'
-        }
-      ],
-      cards_2: [
-        // ... 其他卡片的属性
-      ],
       selectedOption: 'all',
       searchText: '',
       classTreeListData: [], // 物种分类树状结构图
@@ -523,7 +469,6 @@ export default {
     getTotalDomain() {
       // 获取总的分类
       getDomainList().then((response) => {
-        console.log(response.data)
         this.classTreeListData = response.data.data
       })
     },
@@ -535,7 +480,6 @@ export default {
           this.metaList = response.data.list
           this.total = response.data.count
           this.loading = false
-          console.log(response.data.list)
         }
       )
     },
