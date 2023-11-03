@@ -127,7 +127,12 @@
         </el-form>
         <!-- 添加或修改对话框 -->
         <el-dialog :title="title" :visible.sync="open" width="500px">
-          <el-form ref="metaList" :model="metaList" :rules="rules" label-width="80px">
+          <el-form
+            ref="metaList"
+            :model="metaList"
+            :rules="rules"
+            label-width="80px"
+          >
             <el-form-item label="类别" prop="categoryName">
               <el-select v-model="metaList.categoryName" placeholder="请选择">
                 <el-option
@@ -423,8 +428,7 @@ export default {
       },
       // 分类名称
       deptspeciesClassificationName: undefined,
-      cards: [
-      ],
+      cards: [],
       cards_2: [
         // ... 其他卡片的属性
       ],
@@ -449,8 +453,7 @@ export default {
   },
   methods: {
     /** 查询物种下拉树结构 */
-    getTreeselect() {
-    },
+    getTreeselect() {},
     // 筛选节点
     filterNode(value, data) {
       if (!value) return true
@@ -488,15 +491,12 @@ export default {
     /** 查询参数列表 */
     getList() {
       this.loading = true
-      console.log(this.queryParams)
-      listMeta(this.queryParams).then(
-        (response) => {
-          this.metaList = response.data.list
-          this.total = response.data.count
-          this.loading = false
-          console.log(response.data)
-        }
-      )
+      listMeta(this.queryParams).then((response) => {
+        this.metaList = response.data.list
+        this.total = response.data.count
+        this.loading = false
+        console.log(response.data)
+      })
     },
     // 取消按钮
     cancel() {

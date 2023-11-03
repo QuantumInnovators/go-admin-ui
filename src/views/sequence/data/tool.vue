@@ -3,52 +3,11 @@
     <template #wrapper>
       <el-card class="box-card">
         <el-form
-          ref="uploadForm"
-          :model="formData"
-          :rules="rules"
-          size="medium"
-          label-width="100px"
-        >
-          <el-form-item label="上传" prop="uploadFile" required>
-            <el-upload
-              ref="uploadFile"
-              :headers="headers"
-              :file-list="uploadFilefileList"
-              :action="uploadFileAction"
-              :before-upload="uploadFileBeforeUpload"
-              accept=".fasta"
-              name="file"
-              :data="uploadParams"
-              :on-success="uploadActionSuccess"
-            >
-              <el-button
-                size="small"
-                type="primary"
-                icon="el-icon-upload"
-              >点击上传</el-button>
-            </el-upload>
-          </el-form-item>
-          <el-form-item size="large">
-            <el-button type="primary" @click="submitUploadForm">提交</el-button>
-            <el-button @click="resetUploadForm">重置</el-button>
-          </el-form-item>
-        </el-form>
-        <el-form
           ref="queryForm"
           :model="queryParams"
           :inline="true"
           label-width="68px"
         >
-          <el-form-item label="分类" prop="classId">
-            <el-input
-              v-model="queryParams.classId"
-              placeholder="分类"
-              clearable
-              size="mini"
-              style="width: 160px"
-              @keyup.enter.native="handleQuery"
-            />
-          </el-form-item>
           <el-form-item>
             <el-button
               type="primary"
@@ -63,65 +22,41 @@
             >重置</el-button>
           </el-form-item>
         </el-form>
-        <el-row :gutter="10" class="mb8">
-          <el-col :span="1.5">
-            <el-button
-              v-permisaction="['sequence:sequence:add']"
-              type="primary"
-              icon="el-icon-plus"
-              size="mini"
-              @click="handleAdd"
-            >新增
-            </el-button>
-          </el-col>
-          <el-col :span="1.5">
-            <el-button
-              v-permisaction="['sequence:sequence:edit']"
-              type="success"
-              icon="el-icon-edit"
-              size="mini"
-              :disabled="single"
-              @click="handleUpdate"
-            >修改
-            </el-button>
-          </el-col>
-          <el-col :span="1.5">
-            <el-button
-              v-permisaction="['sequence:sequence:remove']"
-              type="danger"
-              icon="el-icon-delete"
-              size="mini"
-              :disabled="multiple"
-              @click="handleDelete"
-            >删除
-            </el-button>
-          </el-col>
+
+        <el-row>
+          <el-breadcrumb separator="/">
+            <el-page-header content="全部文件" @back="goBack" />
+            <el-breadcrumb-item :to="{ path: '/' }">全部文件</el-breadcrumb-item>
+            <el-breadcrumb-item><a href="/">活动管理</a></el-breadcrumb-item>
+            <el-breadcrumb-item>活动列表</el-breadcrumb-item>
+          </el-breadcrumb>
         </el-row>
+        <div class="table-crumb mb5 mt5"><cite>全部文件</cite></div>
         <el-table
           v-loading="loading"
-          :data="sequenceList"
+          :data="projectsList"
           @selection-change="handleSelectionChange"
         >
-          <el-table-column type="selection" width="55" align="center" />
+          <el-table-column type="selection" width="355" align="center" />
           <el-table-column
-            label="名称"
-            prop="sequenceId"
-            :show-overflow-tooltip="true"
-            width="100"
-          />
-          <el-table-column
-            label="描述"
-            prop="sequenceDescription"
+            label="项目名称"
+            sortable="custom"
+            prop="folderName"
             :show-overflow-tooltip="true"
             width="300"
           />
+          <el-table-column label="描述" width="55" align="center" prop="desc" :show-overflow-tooltip="true" />
           <el-table-column
-            label="序列编码"
+            label="创建时间"
             sortable="custom"
-            prop="sequence"
-            :show-overflow-tooltip="true"
-            width="600"
-          />
+            prop="createdAt"
+            width="260"
+          >
+            <template slot-scope="scope">
+              <span>{{ parseTime(scope.row.createdAt) }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="大小/类型" width="80" align="center" prop="SizeStyle" :formatter="statusFormat" />
           <el-table-column
             label="操作"
             align="center"
@@ -136,7 +71,7 @@
               >
                 <el-button
                   slot="reference"
-                  v-permisaction="['sequence:sequence:edit']"
+                  v-permisaction="['sequence:projects:edit']"
                   size="mini"
                   type="text"
                   icon="el-icon-edit"
@@ -151,7 +86,7 @@
               >
                 <el-button
                   slot="reference"
-                  v-permisaction="['sequence:sequence:remove']"
+                  v-permisaction="['sequence:projects:remove']"
                   size="mini"
                   type="text"
                   icon="el-icon-delete"
@@ -161,6 +96,7 @@
             </template>
           </el-table-column>
         </el-table>
+
         <pagination
           v-show="total > 0"
           :total="total"
@@ -168,17 +104,24 @@
           :limit.sync="queryParams.pageSize"
           @pagination="getList"
         />
+
         <!-- 添加或修改对话框 -->
         <el-dialog :title="title" :visible.sync="open" width="500px">
           <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-            <el-form-item label="" prop="sequenceId">
-              <el-input v-model="form.sequenceId" placeholder="" />
+            <el-form-item label="目录名称" prop="folderName">
+              <el-input v-model="form.folderName" placeholder="目录名称" />
             </el-form-item>
-            <el-form-item label="" prop="sequenceDescription">
-              <el-input v-model="form.sequenceDescription" placeholder="" />
+            <el-form-item label="是否是项目名称" prop="isProject">
+              <el-input v-model="form.isProject" placeholder="是否是项目名称" />
             </el-form-item>
-            <el-form-item label="" prop="sequence">
-              <el-input v-model="form.sequence" placeholder="" />
+            <el-form-item label="是否为目录" prop="isFolder">
+              <el-input v-model="form.isFolder" placeholder="是否为目录" />
+            </el-form-item>
+            <el-form-item label="文件路径" prop="path">
+              <el-input v-model="form.path" placeholder="文件路径" />
+            </el-form-item>
+            <el-form-item label="目录id" prop="parentFolderId">
+              <el-input v-model="form.parentFolderId" placeholder="目录id" />
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
@@ -191,26 +134,17 @@
   </BasicLayout>
 </template>
 
-<style>
-.el-upload__tip {
-  line-height: 1.2;
-}
-</style>
-
 <script>
 import {
-  addSequence,
-  delSequence,
-  getSequence,
-  listSequence,
-  updateSequence,
-  uploadSequence
-} from '@/api/sequence/sequence'
-
-import { getToken } from '@/utils/auth'
+  addProjects,
+  delProjects,
+  getProjects,
+  listProjects,
+  updateProjects
+} from '@/api/sequence/projects'
 
 export default {
-  name: 'Sequence',
+  name: 'Projects',
   components: {},
   data() {
     return {
@@ -231,33 +165,19 @@ export default {
       isEdit: false,
       // 类型数据字典
       typeOptions: [],
-      sequenceList: [],
-      headers: { Authorization: 'Bearer ' + getToken() },
+      projectsList: [],
 
       // 关系表类型
 
       // 查询参数
       queryParams: {
         pageIndex: 1,
-        pageSize: 10,
-        classId: ''
+        pageSize: 10
       },
       // 表单参数
       form: {},
       // 表单校验
-      rules: {},
-      // 上传文件
-      formData: {
-        uploadFile: null
-      },
-      path: {},
-      uploadRules: {},
-      uploadFileAction:
-        process.env.VUE_APP_BASE_API + '/api/v1/public/uploadFile',
-      uploadParams: {
-        type: 4
-      },
-      uploadFilefileList: []
+      rules: {}
     }
   },
   created() {
@@ -267,9 +187,9 @@ export default {
     /** 查询参数列表 */
     getList() {
       this.loading = true
-      listSequence(this.addDateRange(this.queryParams, this.dateRange)).then(
+      listProjects(this.addDateRange(this.queryParams, this.dateRange)).then(
         (response) => {
-          this.sequenceList = response.data.list
+          this.projectsList = response.data.list
           this.total = response.data.count
           this.loading = false
         }
@@ -284,9 +204,11 @@ export default {
     reset() {
       this.form = {
         id: undefined,
-        sequenceId: undefined,
-        sequenceDescription: undefined,
-        sequence: undefined
+        folderName: undefined,
+        isProject: undefined,
+        isFolder: undefined,
+        path: undefined,
+        parentFolderId: undefined
       }
       this.resetForm('form')
     },
@@ -313,7 +235,7 @@ export default {
     handleAdd() {
       this.reset()
       this.open = true
-      this.title = '添加Sequence'
+      this.title = '添加Projects'
       this.isEdit = false
     },
     // 多选框选中数据
@@ -326,10 +248,10 @@ export default {
     handleUpdate(row) {
       this.reset()
       const id = row.id || this.ids
-      getSequence(id).then((response) => {
+      getProjects(id).then((response) => {
         this.form = response.data
         this.open = true
-        this.title = '修改Sequence'
+        this.title = '修改Projects'
         this.isEdit = true
       })
     },
@@ -338,7 +260,7 @@ export default {
       this.$refs['form'].validate((valid) => {
         if (valid) {
           if (this.form.id !== undefined) {
-            updateSequence(this.form).then((response) => {
+            updateProjects(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess(response.msg)
                 this.open = false
@@ -348,7 +270,7 @@ export default {
               }
             })
           } else {
-            addSequence(this.form).then((response) => {
+            addProjects(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess(response.msg)
                 this.open = false
@@ -371,7 +293,7 @@ export default {
         type: 'warning'
       })
         .then(function() {
-          return delSequence({ ids: Ids })
+          return delProjects({ ids: Ids })
         })
         .then((response) => {
           if (response.code === 200) {
@@ -383,45 +305,25 @@ export default {
           }
         })
         .catch(function() {})
-    },
-    submitUploadForm() {
-      this.$refs['uploadForm'].validate((valid) => {
-        // console.log(this.uploadFilefileList)
-        // if (!valid) return
-        // TODO 提交表单
-        uploadSequence(this.path).then((response) => {
-          if (response.code === 200) {
-            this.msgSuccess(response.msg)
-            this.open = false
-            this.getList()
-          } else {
-            this.msgError(response.msg)
-          }
-        })
-      })
-    },
-    resetUploadForm() {
-      this.$refs['uploadForm'].resetFields()
-      this.uploadFilefileList = []
-    },
-    uploadActionSuccess(response, file, fileList) {
-      // 文件上传成功后的处理逻辑
-      this.path.path = response.data.path
-      console.log(this.path)
-    },
-    uploadFileBeforeUpload(file) {
-      console.log(file)
-      return true
-      // const isRightSize = file.size / 1024 / 1024 < 2
-      // if (!isRightSize) {
-      //   this.$message.error('文件大小超过 2MB')
-      // }
-      // const isAccept = new RegExp('.fasta').test(file.type)
-      // if (!isAccept) {
-      //   this.$message.error('应该选择.fasta类型的文件')
-      // }
-      // return isRightSize && isAccept
     }
   }
 }
 </script>
+<style scoped>
+.table-crumb {
+    font-size: 14px;
+    color: #adb5bd;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-wrap: wrap;
+    flex-wrap: wrap;
+}
+
+.mb5 {
+    margin-bottom: 5px;
+}
+.mt5 {
+    margin-top: 5px;
+}
+</style>

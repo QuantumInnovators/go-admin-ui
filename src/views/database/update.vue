@@ -8,8 +8,8 @@
         <div>
           <el-col :span="24">
             <el-form
-              ref="elForm"
-              :model="formData"
+              ref="form"
+              :model="form"
               :rules="rules"
               size="medium"
               label-width="50px"
@@ -17,26 +17,26 @@
             >
               <el-form-item label="编号">
                 <el-col :span="2.5">
-                  <el-input v-model="formData.input1" placeholder="请输入编号" />
+                  <el-input
+                    v-model="form.sequenceId"
+                    placeholder="请输入编号"
+                  />
                 </el-col>
               </el-form-item>
               <el-form-item label="拉丁文名">
                 <el-col :span="2.5">
-                  <el-input
-                    v-model="formData.input2"
-                    placeholder="请输入拉丁文名"
-                  />
+                  <el-input v-model="form.name" placeholder="请输入拉丁文名" />
                 </el-col>
               </el-form-item>
               <el-form-item label="数据库">
-                <el-radio-group v-model="formData.resource">
+                <el-radio-group v-model="form.source">
                   <el-radio label="NCBI数据库" />
                   <el-radio label="北京数据库" />
                 </el-radio-group>
               </el-form-item>
               <el-form-item label="分类">
                 <el-autocomplete
-                  v-model="formData.state1"
+                  v-model="form.category"
                   class="inline-input"
                   :fetch-suggestions="querySearch"
                   placeholder="请输入内容"
@@ -45,7 +45,7 @@
               </el-form-item>
               <el-form-item label="FASTA:" prop="el_input_textarea_fasta">
                 <el-input
-                  v-model="formData.el_input_textarea_fasta"
+                  v-model="form.sequence"
                   type="textarea"
                   placeholder="请输入多行文本FASTA:"
                   :autosize="{ minRows: 6, maxRows: 10 }"
@@ -86,7 +86,7 @@ Use only ASCII characters for your definition line and IUPAC codes for your sequ
         <div :span="10">
           <el-form
             ref="uploadForm"
-            :model="formData"
+            :model="uploadForm"
             :rules="rules"
             size="big"
             label-width="100px"
@@ -112,7 +112,7 @@ Use only ASCII characters for your definition line and IUPAC codes for your sequ
             </el-form-item>
             <el-form-item label="分类">
               <el-autocomplete
-                v-model="formData.state1"
+                v-model="uploadForm.category"
                 class="inline-input"
                 :fetch-suggestions="querySearch"
                 placeholder="请输入内容"
@@ -120,7 +120,10 @@ Use only ASCII characters for your definition line and IUPAC codes for your sequ
               />
             </el-form-item>
             <el-form-item size="large">
-              <el-button type="primary" @click="submitUploadForm">提交</el-button>
+              <el-button
+                type="primary"
+                @click="submitUploadForm"
+              >提交</el-button>
               <el-button @click="resetUploadForm">重置</el-button>
             </el-form-item>
           </el-form>
@@ -132,8 +135,8 @@ Use only ASCII characters for your definition line and IUPAC codes for your sequ
 
 <style scoped>
 .custom-update-tabs >>> .el-tabs__item.is-active {
-background-color: #66c0fc; /* 设置激活时的背景颜色 */
-color: white; /* 设置激活时的文字颜色 */
+  background-color: #66c0fc; /* 设置激活时的背景颜色 */
+  color: white; /* 设置激活时的文字颜色 */
 }
 
 .header-button {
@@ -167,17 +170,10 @@ export default {
       tabPosition: 'left',
       fastaContent: '', // 绑定文本框的值
       headers: { Authorization: 'Bearer ' + getToken() },
-      formData: {
-        el_selete_database: 1,
-        input1: '',
-        input2: '',
-        resource: '',
-        state1: '',
-        el_input_textarea_fasta: '',
-        el_button_primary_submit: undefined
-      },
+      form: {}, // 新增序列表单
+      uploadForm: {}, // 文件上传表单
       rules: {
-        el_input_textarea_fasta: [
+        sequence: [
           {
             required: true,
             message: '请输入多行文本FASTA:',
@@ -231,14 +227,12 @@ export default {
     },
     submitUploadForm() {
       this.$refs['uploadForm'].validate((valid) => {
-        // console.log(this.uploadFilefileList)
         // if (!valid) return
         // TODO 提交表单
         uploadSequenceByFile(this.path).then((response) => {
           if (response.code === 200) {
             this.msgSuccess(response.msg)
-            this.open = false
-            this.getList()
+            this.resetUploadForm()
           } else {
             this.msgError(response.msg)
           }
@@ -251,7 +245,6 @@ export default {
     },
     uploadActionSuccess(response, file, fileList) {
       // 文件上传成功后的处理逻辑
-      console.log(response)
       this.path.path = response.data.path
     },
     uploadFileBeforeUpload(file) {
@@ -274,8 +267,6 @@ export default {
           addSequence(this.form).then((response) => {
             if (response.code === 200) {
               this.msgSuccess(response.msg)
-              this.open = false
-              this.getList()
             } else {
               this.msgError(response.msg)
             }
